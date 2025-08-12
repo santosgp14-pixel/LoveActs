@@ -101,3 +101,112 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+## user_problem_statement: "Crear aplicación web LoveActs para parejas registrar actividades diarias de afecto con autenticación simple, sistema de vinculación y registro de actividades"
+
+## backend:
+  - task: "Autenticación JWT con registro/login"
+    implemented: true
+    working: false  # needs testing
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Implementado sistema completo de autenticación con JWT, registro, login, y gestión de usuarios en MongoDB"
+
+  - task: "Sistema de vinculación de parejas con códigos únicos"
+    implemented: true
+    working: false  # needs testing
+    file: "/app/backend/server.py"  
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main" 
+          comment: "Implementado sistema de códigos únicos para vincular parejas, endpoints para link/unlink"
+
+  - task: "CRUD de actividades de afecto con puntuación"
+    implemented: true
+    working: false  # needs testing
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high" 
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Implementados endpoints para crear, obtener actividades diarias/semanales, con sistema de puntuación por estrellas"
+
+## frontend:
+  - task: "Interfaz de autenticación responsiva"
+    implemented: true
+    working: false  # needs testing
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Implementada UI romántica con React Context para auth, formularios de login/registro"
+
+  - task: "Dashboard principal con calendario y actividades"
+    implemented: true
+    working: false  # needs testing
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Implementado dashboard completo con vista diaria, puntuaciones, actividades de usuario y pareja"
+
+  - task: "Formulario de registro de actividades"
+    implemented: true
+    working: false  # needs testing
+    file: "/app/frontend/src/App.js" 
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Implementado formulario completo con categorías, rating de estrellas, tiempo del día"
+
+  - task: "Sistema de vinculación de parejas en UI"
+    implemented: true
+    working: false  # needs testing
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Implementado modal y funcionalidad para vincular parejas, mostrar códigos, perfil de usuario"
+
+## metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 0
+  run_ui: false
+
+## test_plan:
+  current_focus:
+    - "Autenticación JWT con registro/login"
+    - "Sistema de vinculación de parejas con códigos únicos" 
+    - "CRUD de actividades de afecto con puntuación"
+    - "Interfaz de autenticación responsiva"
+    - "Dashboard principal con calendario y actividades"
+  stuck_tasks: []
+  test_all: true
+  test_priority: "high_first"
+
+## agent_communication:
+    - agent: "main"
+      message: "Implementada aplicación LoveActs completa con backend FastAPI y frontend React. Sistema incluye autenticación JWT, vinculación de parejas con códigos únicos, registro de actividades con puntuación, y interfaz romántica responsiva. Necesita testing completo de todos los endpoints y funcionalidades de UI."
