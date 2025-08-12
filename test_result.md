@@ -107,39 +107,48 @@
 ## backend:
   - task: "Autenticación JWT con registro/login"
     implemented: true
-    working: false  # needs testing
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: false
           agent: "main"
           comment: "Implementado sistema completo de autenticación con JWT, registro, login, y gestión de usuarios en MongoDB"
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO - Autenticación funcionando perfectamente. Registro de usuarios exitoso con generación de códigos de pareja únicos, login con validación de credenciales, generación de tokens JWT válidos, endpoint /api/me funcionando correctamente. Validación de tokens inválidos y acceso no autorizado funcionando. Fijo error menor en manejo de excepciones JWT (jwt.JWTError -> jwt.InvalidTokenError)."
 
   - task: "Sistema de vinculación de parejas con códigos únicos"
     implemented: true
-    working: false  # needs testing
+    working: true
     file: "/app/backend/server.py"  
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: false
           agent: "main" 
           comment: "Implementado sistema de códigos únicos para vincular parejas, endpoints para link/unlink"
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO - Sistema de vinculación funcionando perfectamente. Códigos únicos generados correctamente, vinculación mutua automática funcionando, validación de códigos inválidos, prevención de auto-vinculación, desvinculación exitosa. Todas las validaciones de negocio implementadas correctamente."
 
   - task: "CRUD de actividades de afecto con puntuación"
     implemented: true
-    working: false  # needs testing
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high" 
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: false
           agent: "main"
           comment: "Implementados endpoints para crear, obtener actividades diarias/semanales, con sistema de puntuación por estrellas"
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO - CRUD de actividades funcionando perfectamente. Creación de actividades con validación de rating (1-5), obtención de actividades diarias con cálculo de puntuaciones para usuario y pareja, estadísticas semanales funcionando, eliminación de actividades con validación de permisos. Todas las funcionalidades core implementadas correctamente."
 
 ## frontend:
   - task: "Interfaz de autenticación responsiva"
