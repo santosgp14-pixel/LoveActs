@@ -113,7 +113,7 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
         return user
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expirado")
-    except jwt.JWTError:
+    except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Token inválido")
 
 def generate_partner_code() -> str:
