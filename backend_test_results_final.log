@@ -1,0 +1,72 @@
+============================================================
+🚀 STARTING LOVEACTS BACKEND TESTING SUITE
+============================================================
+Testing backend at: https://pareja-app.preview.emergentagent.com/api
+
+
+🧪 Running: Health Check
+✅ PASS: Health Check - API is healthy
+
+🧪 Running: User Registration
+✅ PASS: User Registration (User 1) - María registered successfully with code EC4BBAAB
+✅ PASS: User Registration (User 2) - Carlos registered successfully with code 9209C9A2
+
+🧪 Running: Duplicate Email Registration
+✅ PASS: Duplicate Email Test - Correctly rejected duplicate email
+
+🧪 Running: User Login
+✅ PASS: User Login (User 1) - María logged in successfully
+✅ PASS: User Login (User 2) - Carlos logged in successfully
+
+🧪 Running: Invalid Login
+✅ PASS: Invalid Login Test - Correctly rejected invalid credentials
+
+🧪 Running: Get Current User
+✅ PASS: Get Current User - Successfully retrieved user info with JWT
+
+🧪 Running: Unauthorized Access
+✅ PASS: Unauthorized Access (No Token) - Correctly rejected request without token
+❌ FAIL: Unauthorized Access (Invalid Token) - Should have returned 401, got 500
+
+🧪 Running: Partner Linking
+✅ PASS: Partner Linking - Carlos successfully linked to María
+
+🧪 Running: Mutual Partner Linking
+✅ PASS: Mutual Partner Linking - Partner linking is mutual - María sees Carlos as partner
+
+🧪 Running: Invalid Partner Code
+❌ FAIL: Invalid Partner Code - Should have returned 404, got 400
+
+🧪 Running: Create Activities
+✅ PASS: Create Activities - Successfully created activities for both users
+
+🧪 Running: Invalid Activity Rating
+✅ PASS: Invalid Activity Rating - Correctly rejected invalid rating
+
+🧪 Running: Get Daily Activities
+✅ PASS: Get Daily Activities - Retrieved daily activities - User: 2 activities (score: 9), Partner: 3 activities (score: 12)
+
+🧪 Running: Get Weekly Stats
+✅ PASS: Get Weekly Stats - Retrieved weekly stats - Total activities: 5, User score: 9, Partner score: 12
+
+🧪 Running: Delete Activity
+✅ PASS: Delete Activity - Successfully deleted activity
+
+🧪 Running: Delete Nonexistent Activity
+✅ PASS: Delete Nonexistent Activity - Correctly returned 404 for non-existent activity
+
+🧪 Running: Unlink Partner
+✅ PASS: Unlink Partner - Successfully unlinked partners
+
+============================================================
+📊 TESTING SUMMARY
+============================================================
+✅ Passed: 15
+❌ Failed: 2
+📈 Success Rate: 88.2%
+
+🔍 FAILED TESTS:
+   • Unauthorized Access (Invalid Token): Should have returned 401, got 500
+   • Invalid Partner Code: Should have returned 404, got 400
+
+============================================================

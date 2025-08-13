@@ -1,0 +1,84 @@
+============================================================
+🚀 STARTING LOVEACTS BACKEND TESTING SUITE
+============================================================
+Testing backend at: https://pareja-app.preview.emergentagent.com/api
+
+
+🧪 Running: Health Check
+❌ FAIL: Health Check - HTTP 502
+
+🧪 Running: User Registration
+❌ FAIL: User Registration (User 1) - HTTP 502
+
+🧪 Running: Duplicate Email Registration
+❌ FAIL: Duplicate Email Test - No user1 data available
+
+🧪 Running: User Login
+❌ FAIL: User Login - No user data available for login test
+
+🧪 Running: Invalid Login
+❌ FAIL: Invalid Login Test - Should have returned 401, got 502
+
+🧪 Running: Get Current User
+❌ FAIL: Get Current User - No user1 token available
+
+🧪 Running: Unauthorized Access
+❌ FAIL: Unauthorized Access (No Token) - Should have returned 403, got 502
+
+🧪 Running: Partner Linking
+❌ FAIL: Partner Linking - Missing tokens or partner codes
+
+🧪 Running: Mutual Partner Linking
+❌ FAIL: Mutual Partner Linking - No user1 token available
+
+🧪 Running: Invalid Partner Code
+❌ FAIL: Invalid Partner Code - No user1 token available
+
+🧪 Running: Create Activities
+❌ FAIL: Create Activities - Missing user tokens
+
+🧪 Running: Invalid Activity Rating
+❌ FAIL: Invalid Activity Rating - No user1 token available
+
+🧪 Running: Get Daily Activities
+❌ FAIL: Get Daily Activities - No user1 token available
+
+🧪 Running: Get Weekly Stats
+❌ FAIL: Get Weekly Stats - No user1 token available
+
+🧪 Running: Delete Activity
+❌ FAIL: Delete Activity - No user1 token available
+
+🧪 Running: Delete Nonexistent Activity
+❌ FAIL: Delete Nonexistent Activity - No user1 token available
+
+🧪 Running: Unlink Partner
+❌ FAIL: Unlink Partner - No user1 token available
+
+============================================================
+📊 TESTING SUMMARY
+============================================================
+✅ Passed: 0
+❌ Failed: 17
+📈 Success Rate: 0.0%
+
+🔍 FAILED TESTS:
+   • Health Check: HTTP 502
+   • User Registration (User 1): HTTP 502
+   • Duplicate Email Test: No user1 data available
+   • User Login: No user data available for login test
+   • Invalid Login Test: Should have returned 401, got 502
+   • Get Current User: No user1 token available
+   • Unauthorized Access (No Token): Should have returned 403, got 502
+   • Partner Linking: Missing tokens or partner codes
+   • Mutual Partner Linking: No user1 token available
+   • Invalid Partner Code: No user1 token available
+   • Create Activities: Missing user tokens
+   • Invalid Activity Rating: No user1 token available
+   • Get Daily Activities: No user1 token available
+   • Get Weekly Stats: No user1 token available
+   • Delete Activity: No user1 token available
+   • Delete Nonexistent Activity: No user1 token available
+   • Unlink Partner: No user1 token available
+
+============================================================
