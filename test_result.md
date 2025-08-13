@@ -261,12 +261,12 @@
 
 ## test_plan:
   current_focus:
-    - "Sistema de calificación por pareja receptora"
-    - "API para estados de ánimo diarios"
-    - "Sistema de Recuerdos Especiales"
-    - "Gamificación expandida con logros"
     - "Navegación expandida con 5 secciones"
     - "Sección Mi Pareja completa"
+    - "Sección Recuerdos Especiales"
+    - "Sistema estado ánimo con modales"
+    - "Modal calificación de actividades"
+    - "Dashboard expandido con accesos rápidos"
   stuck_tasks: []
   test_all: true
   test_priority: "high_first"
