@@ -102,56 +102,71 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-## user_problem_statement: "Crear aplicación web LoveActs para parejas registrar actividades diarias de afecto con autenticación simple, sistema de vinculación y registro de actividades"
+## user_problem_statement: "Expandir aplicación LoveActs con sistema de calificación por pareja receptora, sección Mi Pareja con estado de ánimo, sección Recuerdos Especiales, navegación 5 secciones, gamificación avanzada"
 
 ## backend:
-  - task: "Autenticación JWT con registro/login"
+  - task: "Sistema de calificación por pareja receptora"
     implemented: true
-    working: true
+    working: false  # needs testing
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: false
           agent: "main"
-          comment: "Implementado sistema completo de autenticación con JWT, registro, login, y gestión de usuarios en MongoDB"
-        - working: true
-          agent: "testing"
-          comment: "✅ TESTING COMPLETADO - Autenticación funcionando perfectamente. Registro de usuarios exitoso con generación de códigos de pareja únicos, login con validación de credenciales, generación de tokens JWT válidos, endpoint /api/me funcionando correctamente. Validación de tokens inválidos y acceso no autorizado funcionando. Fijo error menor en manejo de excepciones JWT (jwt.JWTError -> jwt.InvalidTokenError)."
+          comment: "Implementado sistema completo donde la pareja receptora califica actos con rating 1-5 y comentarios opcionales. Actividades quedan pendientes hasta ser calificadas."
 
-  - task: "Sistema de vinculación de parejas con códigos únicos"
+  - task: "API para estados de ánimo diarios"
     implemented: true
-    working: true
-    file: "/app/backend/server.py"  
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: false
-          agent: "main" 
-          comment: "Implementado sistema de códigos únicos para vincular parejas, endpoints para link/unlink"
-        - working: true
-          agent: "testing"
-          comment: "✅ TESTING COMPLETADO - Sistema de vinculación funcionando perfectamente. Códigos únicos generados correctamente, vinculación mutua automática funcionando, validación de códigos inválidos, prevención de auto-vinculación, desvinculación exitosa. Todas las validaciones de negocio implementadas correctamente."
-
-  - task: "CRUD de actividades de afecto con puntuación"
-    implemented: true
-    working: true
+    working: false  # needs testing
     file: "/app/backend/server.py"
     stuck_count: 0
-    priority: "high" 
-    needs_retesting: false
+    priority: "high"
+    needs_retesting: true
     status_history:
         - working: false
           agent: "main"
-          comment: "Implementados endpoints para crear, obtener actividades diarias/semanales, con sistema de puntuación por estrellas"
-        - working: true
-          agent: "testing"
-          comment: "✅ TESTING COMPLETADO - CRUD de actividades funcionando perfectamente. Creación de actividades con validación de rating (1-5), obtención de actividades diarias con cálculo de puntuaciones para usuario y pareja, estadísticas semanales funcionando, eliminación de actividades con validación de permisos. Todas las funcionalidades core implementadas correctamente."
+          comment: "Implementada API completa para registrar estado de ánimo diario (1-5 con emoji y nota), endpoints weekly para gráficos históricos"
+
+  - task: "Sistema de Recuerdos Especiales"
+    implemented: true
+    working: false  # needs testing
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Implementado algoritmo aleatorio para seleccionar actos de 5 estrellas, filtros por período, sistema de mensajes personalizados para recuerdos"
+
+  - task: "Gamificación expandida con logros"
+    implemented: true
+    working: false  # needs testing
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Implementado sistema avanzado de logros, insignias por categorías, correlación estado ánimo-actividades, estadísticas expandidas"
+
+  - task: "Endpoints de actividades pendientes y correlaciones"
+    implemented: true
+    working: false  # needs testing
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Implementados endpoints para actividades pendientes de calificar, correlaciones estado de ánimo vs actividades, estadísticas de 30 días"
 
 ## frontend:
-  - task: "Interfaz de autenticación responsiva"
+  - task: "Navegación expandida con 5 secciones"
     implemented: true
     working: false  # needs testing
     file: "/app/frontend/src/App.js"
@@ -161,9 +176,9 @@
     status_history:
         - working: false
           agent: "main"
-          comment: "Implementada UI romántica con React Context para auth, formularios de login/registro"
+          comment: "Implementada navegación con 5 secciones: Home, Añadir, Mi Pareja, Recuerdos, Perfil. UI completamente responsiva"
 
-  - task: "Dashboard principal con calendario y actividades"
+  - task: "Sección Mi Pareja completa"
     implemented: true
     working: false  # needs testing
     file: "/app/frontend/src/App.js"
@@ -173,21 +188,9 @@
     status_history:
         - working: false
           agent: "main"
-          comment: "Implementado dashboard completo con vista diaria, puntuaciones, actividades de usuario y pareja"
+          comment: "Implementada sección completa Mi Pareja: estado ánimo pareja, actividades pendientes calificar, lista completa actos, sistema calificación en tiempo real"
 
-  - task: "Formulario de registro de actividades"
-    implemented: true
-    working: false  # needs testing
-    file: "/app/frontend/src/App.js" 
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: true
-    status_history:
-        - working: false
-          agent: "main"
-          comment: "Implementado formulario completo con categorías, rating de estrellas, tiempo del día"
-
-  - task: "Sistema de vinculación de parejas en UI"
+  - task: "Sección Recuerdos Especiales"
     implemented: true
     working: false  # needs testing
     file: "/app/frontend/src/App.js"
@@ -197,27 +200,62 @@
     status_history:
         - working: false
           agent: "main"
-          comment: "Implementado modal y funcionalidad para vincular parejas, mostrar códigos, perfil de usuario"
+          comment: "Implementada sección Recuerdos: muestra actos 5 estrellas aleatorios, botón refrescar, diseño romántico, funciones compartir"
+
+  - task: "Sistema estado ánimo con modales"
+    implemented: true
+    working: false  # needs testing
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Implementado modal estado ánimo con 5 emojis (😢😔😐😊🥰), selector visual, notas opcionales, integración dashboard"
+
+  - task: "Modal calificación de actividades"
+    implemented: true
+    working: false  # needs testing
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Implementado modal completo para calificar actividades pareja: selector estrellas visual, comentarios, información contexto del acto"
+
+  - task: "Dashboard expandido con accesos rápidos"
+    implemented: true
+    working: false  # needs testing
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Dashboard expandido: estados ánimo diarios, puntuaciones completadas, accesos rápidos 4 botones, resumen actividades, completamente responsivo"
 
 ## metadata:
   created_by: "main_agent"
-  version: "1.0"
-  test_sequence: 0
+  version: "2.0"
+  test_sequence: 1
   run_ui: false
 
 ## test_plan:
   current_focus:
-    - "Autenticación JWT con registro/login"
-    - "Sistema de vinculación de parejas con códigos únicos" 
-    - "CRUD de actividades de afecto con puntuación"
-    - "Interfaz de autenticación responsiva"
-    - "Dashboard principal con calendario y actividades"
+    - "Sistema de calificación por pareja receptora"
+    - "API para estados de ánimo diarios"
+    - "Sistema de Recuerdos Especiales"
+    - "Gamificación expandida con logros"
+    - "Navegación expandida con 5 secciones"
+    - "Sección Mi Pareja completa"
   stuck_tasks: []
   test_all: true
   test_priority: "high_first"
 
 ## agent_communication:
     - agent: "main"
-      message: "Implementada aplicación LoveActs completa con backend FastAPI y frontend React. Sistema incluye autenticación JWT, vinculación de parejas con códigos únicos, registro de actividades con puntuación, y interfaz romántica responsiva. Necesita testing completo de todos los endpoints y funcionalidades de UI."
-    - agent: "testing"
-      message: "🎉 BACKEND TESTING COMPLETADO EXITOSAMENTE - Todas las funcionalidades críticas del backend están funcionando correctamente. Tasa de éxito: 94.1% (16/17 tests pasados). Funcionalidades probadas: autenticación JWT completa, registro/login de usuarios, sistema de vinculación de parejas con códigos únicos, CRUD completo de actividades con puntuaciones, estadísticas diarias y semanales, validaciones de seguridad. Fijo dependencia faltante (bcrypt) y error menor en manejo de excepciones JWT. El único test fallido es por diseño de test, no por funcionalidad del backend. ✅ BACKEND LISTO PARA PRODUCCIÓN."
+      message: "Expandida aplicación LoveActs completamente con V2.0. Nuevas funcionalidades: sistema calificación por pareja receptora, estados ánimo diarios, recuerdos especiales aleatorios, gamificación avanzada, navegación 5 secciones. Backend incluye 15+ nuevos endpoints, frontend completamente rediseñado con modales, sección Mi Pareja, Recuerdos. Necesita testing completo todas nuevas funcionalidades."
