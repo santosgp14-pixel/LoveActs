@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Backend Testing Suite for LoveActs Application
-Tests all critical backend functionality including authentication, partner linking, and activities.
+Backend Testing Suite for LoveActs V2.0 Application
+Tests all critical backend functionality including authentication, partner linking, activities,
+rating system, mood tracking, special memories, and gamification.
 """
 
 import requests
@@ -10,9 +11,10 @@ import uuid
 from datetime import datetime, timedelta
 import sys
 import os
+import random
 
 # Backend URL from environment
-BACKEND_URL = "https://pareja-app.preview.emergentagent.com/api"
+BACKEND_URL = "https://8209b18f-2b28-4353-b692-57dc859b977b.preview.emergentagent.com/api"
 
 class LoveActsBackendTester:
     def __init__(self):
