@@ -107,63 +107,78 @@
 ## backend:
   - task: "Sistema de calificación por pareja receptora"
     implemented: true
-    working: false  # needs testing
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: false
           agent: "main"
           comment: "Implementado sistema completo donde la pareja receptora califica actos con rating 1-5 y comentarios opcionales. Actividades quedan pendientes hasta ser calificadas."
+        - working: true
+          agent: "testing"
+          comment: "✅ SISTEMA COMPLETAMENTE FUNCIONAL: Probado POST /api/activities/{id}/rate con validación 1-5, comentarios opcionales, verificación que solo pareja puede calificar, prevención duplicados, actividades quedan is_pending_rating=true hasta calificación. Validaciones de seguridad funcionando correctamente."
 
   - task: "API para estados de ánimo diarios"
     implemented: true
-    working: false  # needs testing
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: false
           agent: "main"
           comment: "Implementada API completa para registrar estado de ánimo diario (1-5 con emoji y nota), endpoints weekly para gráficos históricos"
+        - working: true
+          agent: "testing"
+          comment: "✅ API COMPLETAMENTE FUNCIONAL: Probado POST /api/mood con mood_level 1-5, emoji, nota opcional. GET /api/mood/weekly/{start_date} retorna 7 días. Validación niveles 1-5, actualización mood existente mismo día, integración con daily activities. Un mood por día por usuario funcionando."
 
   - task: "Sistema de Recuerdos Especiales"
     implemented: true
-    working: false  # needs testing
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: false
           agent: "main"
           comment: "Implementado algoritmo aleatorio para seleccionar actos de 5 estrellas, filtros por período, sistema de mensajes personalizados para recuerdos"
+        - working: true
+          agent: "testing"
+          comment: "✅ SISTEMA COMPLETAMENTE FUNCIONAL: Probado GET /api/memories/special retorna solo actividades 5 estrellas, algoritmo aleatorio hasta 5 recuerdos, mensajes personalizados según creador. GET /api/memories/filter con days_back y category funcionando. Solo actividades calificadas con 5 estrellas aparecen en recuerdos."
 
   - task: "Gamificación expandida con logros"
     implemented: true
-    working: false  # needs testing
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: false
           agent: "main"
           comment: "Implementado sistema avanzado de logros, insignias por categorías, correlación estado ánimo-actividades, estadísticas expandidas"
+        - working: true
+          agent: "testing"
+          comment: "✅ SISTEMA COMPLETAMENTE FUNCIONAL: Probado GET /api/achievements retorna logros e insignias basados en estadísticas (total_activities, five_star_activities, category_distribution). GET /api/stats/correlation calcula correlación mood-actividades 30 días. Sistema de insignias por categorías funcionando correctamente."
 
   - task: "Endpoints de actividades pendientes y correlaciones"
     implemented: true
-    working: false  # needs testing
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: false
           agent: "main"
           comment: "Implementados endpoints para actividades pendientes de calificar, correlaciones estado de ánimo vs actividades, estadísticas de 30 días"
+        - working: true
+          agent: "testing"
+          comment: "✅ ENDPOINTS COMPLETAMENTE FUNCIONALES: Probado GET /api/activities/pending-ratings retorna actividades pareja pendientes calificar. GET /api/activities/daily/{date} incluye pending_ratings_count, user_mood, partner_mood, completed_activities_score. Cálculo correcto actividades completadas vs pendientes."
 
 ## frontend:
   - task: "Navegación expandida con 5 secciones"
