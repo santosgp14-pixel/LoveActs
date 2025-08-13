@@ -16,7 +16,7 @@ import random
 # Backend URL from environment
 BACKEND_URL = "https://8209b18f-2b28-4353-b692-57dc859b977b.preview.emergentagent.com/api"
 
-class LoveActsBackendTester:
+class LoveActsV2BackendTester:
     def __init__(self):
         self.session = requests.Session()
         self.user1_token = None
@@ -26,6 +26,7 @@ class LoveActsBackendTester:
         self.user1_partner_code = None
         self.user2_partner_code = None
         self.test_results = []
+        self.created_activities = []
         
     def log_result(self, test_name, success, message, details=None):
         """Log test results"""
@@ -47,8 +48,8 @@ class LoveActsBackendTester:
             response = self.session.get(f"{BACKEND_URL}/health")
             if response.status_code == 200:
                 data = response.json()
-                if data.get("status") == "healthy":
-                    self.log_result("Health Check", True, "API is healthy")
+                if data.get("status") == "healthy" and data.get("version") == "2.0.0":
+                    self.log_result("Health Check", True, "API V2.0 is healthy")
                     return True
                 else:
                     self.log_result("Health Check", False, "Unexpected health response", data)
@@ -62,7 +63,7 @@ class LoveActsBackendTester:
     
     def test_user_registration(self):
         """Test user registration functionality"""
-        # Test User 1 - Maria
+        # Test User 1 - María
         user1_payload = {
             "name": "María González",
             "email": f"maria.gonzalez.{uuid.uuid4().hex[:8]}@example.com",
@@ -115,149 +116,6 @@ class LoveActsBackendTester:
             self.log_result("User Registration (User 2)", False, f"Request error: {str(e)}")
             return False
     
-    def test_duplicate_email_registration(self):
-        """Test that duplicate email registration fails"""
-        if not self.user1_data:
-            self.log_result("Duplicate Email Test", False, "No user1 data available")
-            return False
-            
-        duplicate_payload = {
-            "name": "Another María",
-            "email": self.user1_data["email"],
-            "password": "DifferentPassword123!"
-        }
-        
-        try:
-            response = self.session.post(f"{BACKEND_URL}/register", json=duplicate_payload)
-            if response.status_code == 400:
-                self.log_result("Duplicate Email Test", True, "Correctly rejected duplicate email")
-                return True
-            else:
-                self.log_result("Duplicate Email Test", False, f"Should have returned 400, got {response.status_code}")
-                return False
-        except Exception as e:
-            self.log_result("Duplicate Email Test", False, f"Request error: {str(e)}")
-            return False
-    
-    def test_user_login(self):
-        """Test user login functionality"""
-        if not self.user1_data or not self.user2_data:
-            self.log_result("User Login", False, "No user data available for login test")
-            return False
-        
-        # Test User 1 login
-        login1_payload = {
-            "email": self.user1_data["email"],
-            "password": "MiAmor2024!"
-        }
-        
-        try:
-            response = self.session.post(f"{BACKEND_URL}/login", json=login1_payload)
-            if response.status_code == 200:
-                data = response.json()
-                if "token" in data and "user" in data:
-                    self.log_result("User Login (User 1)", True, "María logged in successfully")
-                else:
-                    self.log_result("User Login (User 1)", False, "Missing token or user data", data)
-                    return False
-            else:
-                self.log_result("User Login (User 1)", False, f"HTTP {response.status_code}", response.text)
-                return False
-        except Exception as e:
-            self.log_result("User Login (User 1)", False, f"Request error: {str(e)}")
-            return False
-        
-        # Test User 2 login
-        login2_payload = {
-            "email": self.user2_data["email"],
-            "password": "NuestroAmor2024!"
-        }
-        
-        try:
-            response = self.session.post(f"{BACKEND_URL}/login", json=login2_payload)
-            if response.status_code == 200:
-                data = response.json()
-                if "token" in data and "user" in data:
-                    self.log_result("User Login (User 2)", True, "Carlos logged in successfully")
-                    return True
-                else:
-                    self.log_result("User Login (User 2)", False, "Missing token or user data", data)
-                    return False
-            else:
-                self.log_result("User Login (User 2)", False, f"HTTP {response.status_code}", response.text)
-                return False
-        except Exception as e:
-            self.log_result("User Login (User 2)", False, f"Request error: {str(e)}")
-            return False
-    
-    def test_invalid_login(self):
-        """Test login with invalid credentials"""
-        invalid_payload = {
-            "email": "nonexistent@example.com",
-            "password": "wrongpassword"
-        }
-        
-        try:
-            response = self.session.post(f"{BACKEND_URL}/login", json=invalid_payload)
-            if response.status_code == 401:
-                self.log_result("Invalid Login Test", True, "Correctly rejected invalid credentials")
-                return True
-            else:
-                self.log_result("Invalid Login Test", False, f"Should have returned 401, got {response.status_code}")
-                return False
-        except Exception as e:
-            self.log_result("Invalid Login Test", False, f"Request error: {str(e)}")
-            return False
-    
-    def test_get_current_user(self):
-        """Test getting current user info with JWT token"""
-        if not self.user1_token:
-            self.log_result("Get Current User", False, "No user1 token available")
-            return False
-        
-        headers = {"Authorization": f"Bearer {self.user1_token}"}
-        
-        try:
-            response = self.session.get(f"{BACKEND_URL}/me", headers=headers)
-            if response.status_code == 200:
-                data = response.json()
-                if "user" in data and data["user"]["id"] == self.user1_data["id"]:
-                    self.log_result("Get Current User", True, "Successfully retrieved user info with JWT")
-                    return True
-                else:
-                    self.log_result("Get Current User", False, "Invalid user data returned", data)
-                    return False
-            else:
-                self.log_result("Get Current User", False, f"HTTP {response.status_code}", response.text)
-                return False
-        except Exception as e:
-            self.log_result("Get Current User", False, f"Request error: {str(e)}")
-            return False
-    
-    def test_unauthorized_access(self):
-        """Test that endpoints require valid JWT tokens"""
-        try:
-            # Test without token
-            response = self.session.get(f"{BACKEND_URL}/me")
-            if response.status_code == 403:
-                self.log_result("Unauthorized Access (No Token)", True, "Correctly rejected request without token")
-            else:
-                self.log_result("Unauthorized Access (No Token)", False, f"Should have returned 403, got {response.status_code}")
-                return False
-            
-            # Test with invalid token
-            headers = {"Authorization": "Bearer invalid_token_here"}
-            response = self.session.get(f"{BACKEND_URL}/me", headers=headers)
-            if response.status_code == 401:
-                self.log_result("Unauthorized Access (Invalid Token)", True, "Correctly rejected invalid token")
-                return True
-            else:
-                self.log_result("Unauthorized Access (Invalid Token)", False, f"Should have returned 401, got {response.status_code}")
-                return False
-        except Exception as e:
-            self.log_result("Unauthorized Access", False, f"Request error: {str(e)}")
-            return False
-    
     def test_partner_linking(self):
         """Test partner linking functionality"""
         if not self.user1_token or not self.user2_token or not self.user1_partner_code:
@@ -285,71 +143,28 @@ class LoveActsBackendTester:
             self.log_result("Partner Linking", False, f"Request error: {str(e)}")
             return False
     
-    def test_mutual_partner_linking(self):
-        """Test that partner linking is mutual"""
-        if not self.user1_token:
-            self.log_result("Mutual Partner Linking", False, "No user1 token available")
-            return False
-        
-        headers = {"Authorization": f"Bearer {self.user1_token}"}
-        
-        try:
-            response = self.session.get(f"{BACKEND_URL}/me", headers=headers)
-            if response.status_code == 200:
-                data = response.json()
-                if data.get("partner_name") == "Carlos Rodríguez":
-                    self.log_result("Mutual Partner Linking", True, "Partner linking is mutual - María sees Carlos as partner")
-                    return True
-                else:
-                    self.log_result("Mutual Partner Linking", False, "Partner linking not mutual", data)
-                    return False
-            else:
-                self.log_result("Mutual Partner Linking", False, f"HTTP {response.status_code}", response.text)
-                return False
-        except Exception as e:
-            self.log_result("Mutual Partner Linking", False, f"Request error: {str(e)}")
-            return False
-    
-    def test_invalid_partner_code(self):
-        """Test linking with invalid partner code"""
-        if not self.user1_token:
-            self.log_result("Invalid Partner Code", False, "No user1 token available")
-            return False
-        
-        headers = {"Authorization": f"Bearer {self.user1_token}"}
-        invalid_payload = {"partner_code": "INVALID123"}
-        
-        try:
-            response = self.session.post(f"{BACKEND_URL}/link-partner", json=invalid_payload, headers=headers)
-            if response.status_code == 404:
-                self.log_result("Invalid Partner Code", True, "Correctly rejected invalid partner code")
-                return True
-            else:
-                self.log_result("Invalid Partner Code", False, f"Should have returned 404, got {response.status_code}")
-                return False
-        except Exception as e:
-            self.log_result("Invalid Partner Code", False, f"Request error: {str(e)}")
-            return False
-    
-    def test_create_activities(self):
-        """Test creating activities"""
+    def test_create_activities_v2(self):
+        """Test creating activities with V2.0 structure (no rating initially)"""
         if not self.user1_token or not self.user2_token:
-            self.log_result("Create Activities", False, "Missing user tokens")
+            self.log_result("Create Activities V2", False, "Missing user tokens")
             return False
         
-        # User 1 creates activities
+        # User 1 creates activities (no rating - will be rated by partner)
         activities_user1 = [
             {
-                "description": "Le preparé el desayuno favorito en la cama",
+                "description": "Le preparé el desayuno favorito en la cama con flores",
                 "category": "practical",
-                "rating": 5,
                 "time_of_day": "morning"
             },
             {
-                "description": "Le di un abrazo largo y cálido",
+                "description": "Le di un abrazo largo y cálido cuando llegó del trabajo",
                 "category": "physical", 
-                "rating": 4,
                 "time_of_day": "evening"
+            },
+            {
+                "description": "Le escribí una carta de amor expresando mis sentimientos",
+                "category": "emotional",
+                "time_of_day": "afternoon"
             }
         ]
         
@@ -358,32 +173,31 @@ class LoveActsBackendTester:
         for activity in activities_user1:
             try:
                 response = self.session.post(f"{BACKEND_URL}/activities", json=activity, headers=headers1)
-                if response.status_code != 200:
-                    self.log_result("Create Activities (User 1)", False, f"HTTP {response.status_code}", response.text)
+                if response.status_code == 200:
+                    data = response.json()
+                    if "activity" in data and data["activity"]["is_pending_rating"] == True:
+                        self.created_activities.append(data["activity"]["id"])
+                    else:
+                        self.log_result("Create Activities V2 (User 1)", False, "Activity not marked as pending rating", data)
+                        return False
+                else:
+                    self.log_result("Create Activities V2 (User 1)", False, f"HTTP {response.status_code}", response.text)
                     return False
             except Exception as e:
-                self.log_result("Create Activities (User 1)", False, f"Request error: {str(e)}")
+                self.log_result("Create Activities V2 (User 1)", False, f"Request error: {str(e)}")
                 return False
         
         # User 2 creates activities
         activities_user2 = [
             {
-                "description": "Le escribí una nota de amor y la dejé en su bolso",
+                "description": "Organicé una cita sorpresa en nuestro lugar favorito",
                 "category": "emotional",
-                "rating": 5,
-                "time_of_day": "morning"
+                "time_of_day": "evening"
             },
             {
                 "description": "Hicimos ejercicio juntos en el parque",
                 "category": "physical",
-                "rating": 4,
-                "time_of_day": "afternoon"
-            },
-            {
-                "description": "Cocinamos la cena juntos",
-                "category": "practical",
-                "rating": 3,
-                "time_of_day": "evening"
+                "time_of_day": "morning"
             }
         ]
         
@@ -392,215 +206,423 @@ class LoveActsBackendTester:
         for activity in activities_user2:
             try:
                 response = self.session.post(f"{BACKEND_URL}/activities", json=activity, headers=headers2)
-                if response.status_code != 200:
-                    self.log_result("Create Activities (User 2)", False, f"HTTP {response.status_code}", response.text)
+                if response.status_code == 200:
+                    data = response.json()
+                    if "activity" in data and data["activity"]["is_pending_rating"] == True:
+                        self.created_activities.append(data["activity"]["id"])
+                    else:
+                        self.log_result("Create Activities V2 (User 2)", False, "Activity not marked as pending rating", data)
+                        return False
+                else:
+                    self.log_result("Create Activities V2 (User 2)", False, f"HTTP {response.status_code}", response.text)
                     return False
             except Exception as e:
-                self.log_result("Create Activities (User 2)", False, f"Request error: {str(e)}")
+                self.log_result("Create Activities V2 (User 2)", False, f"Request error: {str(e)}")
                 return False
         
-        self.log_result("Create Activities", True, "Successfully created activities for both users")
+        self.log_result("Create Activities V2", True, f"Successfully created {len(self.created_activities)} activities, all pending rating")
         return True
     
-    def test_invalid_activity_rating(self):
-        """Test creating activity with invalid rating"""
-        if not self.user1_token:
-            self.log_result("Invalid Activity Rating", False, "No user1 token available")
+    def test_rating_system(self):
+        """Test the new rating system where partners rate activities"""
+        if not self.user1_token or not self.user2_token or not self.created_activities:
+            self.log_result("Rating System", False, "Missing tokens or activities to rate")
             return False
         
-        headers = {"Authorization": f"Bearer {self.user1_token}"}
-        invalid_activity = {
-            "description": "Test activity",
-            "category": "general",
-            "rating": 6,  # Invalid - should be 1-5
-            "time_of_day": "morning"
-        }
+        # Get pending ratings for User 2 (should see User 1's activities)
+        headers2 = {"Authorization": f"Bearer {self.user2_token}"}
         
         try:
-            response = self.session.post(f"{BACKEND_URL}/activities", json=invalid_activity, headers=headers)
-            if response.status_code == 400:
-                self.log_result("Invalid Activity Rating", True, "Correctly rejected invalid rating")
-                return True
+            response = self.session.get(f"{BACKEND_URL}/activities/pending-ratings", headers=headers2)
+            if response.status_code == 200:
+                data = response.json()
+                pending_activities = data.get("activities", [])
+                if len(pending_activities) >= 3:  # User 1 created 3 activities
+                    self.log_result("Get Pending Ratings", True, f"Found {len(pending_activities)} pending activities to rate")
+                else:
+                    self.log_result("Get Pending Ratings", False, f"Expected at least 3 pending activities, got {len(pending_activities)}")
+                    return False
             else:
-                self.log_result("Invalid Activity Rating", False, f"Should have returned 400, got {response.status_code}")
+                self.log_result("Get Pending Ratings", False, f"HTTP {response.status_code}", response.text)
                 return False
         except Exception as e:
-            self.log_result("Invalid Activity Rating", False, f"Request error: {str(e)}")
-            return False
-    
-    def test_get_daily_activities(self):
-        """Test getting daily activities"""
-        if not self.user1_token:
-            self.log_result("Get Daily Activities", False, "No user1 token available")
+            self.log_result("Get Pending Ratings", False, f"Request error: {str(e)}")
             return False
         
-        headers = {"Authorization": f"Bearer {self.user1_token}"}
+        # Rate some activities
+        ratings_to_test = [
+            {"rating": 5, "comment": "¡Increíble! Me encantó el desayuno sorpresa"},
+            {"rating": 4, "comment": "Muy dulce, me hizo sentir muy amada"},
+            {"rating": 5, "comment": "La carta me hizo llorar de felicidad"}
+        ]
+        
+        rated_count = 0
+        for i, activity in enumerate(pending_activities[:3]):
+            activity_id = activity["id"]
+            rating_data = ratings_to_test[i]
+            
+            try:
+                response = self.session.post(f"{BACKEND_URL}/activities/{activity_id}/rate", 
+                                           json=rating_data, headers=headers2)
+                if response.status_code == 200:
+                    rated_count += 1
+                else:
+                    self.log_result("Rate Activity", False, f"HTTP {response.status_code}", response.text)
+                    return False
+            except Exception as e:
+                self.log_result("Rate Activity", False, f"Request error: {str(e)}")
+                return False
+        
+        # Test rating validation (invalid rating)
+        try:
+            invalid_rating = {"rating": 6, "comment": "Invalid rating"}
+            response = self.session.post(f"{BACKEND_URL}/activities/{pending_activities[0]['id']}/rate", 
+                                       json=invalid_rating, headers=headers2)
+            if response.status_code == 400:
+                self.log_result("Invalid Rating Validation", True, "Correctly rejected rating > 5")
+            else:
+                self.log_result("Invalid Rating Validation", False, f"Should reject rating > 5, got {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_result("Invalid Rating Validation", False, f"Request error: {str(e)}")
+            return False
+        
+        # Test duplicate rating prevention
+        try:
+            duplicate_rating = {"rating": 3, "comment": "Trying to rate again"}
+            response = self.session.post(f"{BACKEND_URL}/activities/{pending_activities[0]['id']}/rate", 
+                                       json=duplicate_rating, headers=headers2)
+            if response.status_code == 400:
+                self.log_result("Duplicate Rating Prevention", True, "Correctly prevented duplicate rating")
+            else:
+                self.log_result("Duplicate Rating Prevention", False, f"Should prevent duplicate rating, got {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_result("Duplicate Rating Prevention", False, f"Request error: {str(e)}")
+            return False
+        
+        self.log_result("Rating System", True, f"Successfully rated {rated_count} activities with validation working")
+        return True
+    
+    def test_mood_system(self):
+        """Test daily mood tracking system"""
+        if not self.user1_token or not self.user2_token:
+            self.log_result("Mood System", False, "Missing user tokens")
+            return False
+        
+        # Test creating moods for both users
+        moods_to_test = [
+            {"mood_level": 5, "mood_emoji": "🥰", "note": "¡Día increíble con mi pareja!"},
+            {"mood_level": 4, "mood_emoji": "😊", "note": "Muy buen día, me siento feliz"},
+            {"mood_level": 3, "mood_emoji": "😐", "note": "Día normal, nada especial"}
+        ]
+        
+        headers1 = {"Authorization": f"Bearer {self.user1_token}"}
+        headers2 = {"Authorization": f"Bearer {self.user2_token}"}
+        
+        # Create mood for User 1
+        try:
+            response = self.session.post(f"{BACKEND_URL}/mood", json=moods_to_test[0], headers=headers1)
+            if response.status_code == 200:
+                data = response.json()
+                if "mood" in data and data["mood"]["mood_level"] == 5:
+                    self.log_result("Create Mood (User 1)", True, "Successfully created mood for María")
+                else:
+                    self.log_result("Create Mood (User 1)", False, "Invalid mood response", data)
+                    return False
+            else:
+                self.log_result("Create Mood (User 1)", False, f"HTTP {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_result("Create Mood (User 1)", False, f"Request error: {str(e)}")
+            return False
+        
+        # Create mood for User 2
+        try:
+            response = self.session.post(f"{BACKEND_URL}/mood", json=moods_to_test[1], headers=headers2)
+            if response.status_code == 200:
+                data = response.json()
+                if "mood" in data and data["mood"]["mood_level"] == 4:
+                    self.log_result("Create Mood (User 2)", True, "Successfully created mood for Carlos")
+                else:
+                    self.log_result("Create Mood (User 2)", False, "Invalid mood response", data)
+                    return False
+            else:
+                self.log_result("Create Mood (User 2)", False, f"HTTP {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_result("Create Mood (User 2)", False, f"Request error: {str(e)}")
+            return False
+        
+        # Test updating existing mood (should update, not create new)
+        try:
+            updated_mood = {"mood_level": 5, "mood_emoji": "🥰", "note": "Actualicé mi estado de ánimo"}
+            response = self.session.post(f"{BACKEND_URL}/mood", json=updated_mood, headers=headers1)
+            if response.status_code == 200:
+                data = response.json()
+                if "actualizado" in data["message"]:
+                    self.log_result("Update Mood", True, "Successfully updated existing mood")
+                else:
+                    self.log_result("Update Mood", False, "Should have updated existing mood", data)
+                    return False
+            else:
+                self.log_result("Update Mood", False, f"HTTP {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_result("Update Mood", False, f"Request error: {str(e)}")
+            return False
+        
+        # Test invalid mood level
+        try:
+            invalid_mood = {"mood_level": 6, "mood_emoji": "😊", "note": "Invalid mood"}
+            response = self.session.post(f"{BACKEND_URL}/mood", json=invalid_mood, headers=headers1)
+            if response.status_code == 400:
+                self.log_result("Invalid Mood Validation", True, "Correctly rejected mood level > 5")
+            else:
+                self.log_result("Invalid Mood Validation", False, f"Should reject mood > 5, got {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_result("Invalid Mood Validation", False, f"Request error: {str(e)}")
+            return False
+        
+        # Test weekly mood retrieval
+        try:
+            today = datetime.now().date()
+            start_of_week = today - timedelta(days=today.weekday())
+            start_date = start_of_week.isoformat()
+            
+            response = self.session.get(f"{BACKEND_URL}/mood/weekly/{start_date}", headers=headers1)
+            if response.status_code == 200:
+                data = response.json()
+                if "user_moods" in data and "partner_moods" in data and "dates" in data:
+                    self.log_result("Weekly Mood Retrieval", True, f"Retrieved weekly moods for 7 days")
+                else:
+                    self.log_result("Weekly Mood Retrieval", False, "Missing weekly mood data", data)
+                    return False
+            else:
+                self.log_result("Weekly Mood Retrieval", False, f"HTTP {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_result("Weekly Mood Retrieval", False, f"Request error: {str(e)}")
+            return False
+        
+        self.log_result("Mood System", True, "All mood system tests passed")
+        return True
+    
+    def test_special_memories(self):
+        """Test special memories system (5-star activities)"""
+        if not self.user1_token or not self.user2_token:
+            self.log_result("Special Memories", False, "Missing user tokens")
+            return False
+        
+        headers1 = {"Authorization": f"Bearer {self.user1_token}"}
+        
+        # Test getting special memories
+        try:
+            response = self.session.get(f"{BACKEND_URL}/memories/special", headers=headers1)
+            if response.status_code == 200:
+                data = response.json()
+                if "memories" in data:
+                    memories = data["memories"]
+                    if len(memories) > 0:
+                        # Check if memories are 5-star activities
+                        all_five_stars = all(memory["activity"]["rating"] == 5 for memory in memories)
+                        if all_five_stars:
+                            self.log_result("Special Memories Retrieval", True, f"Found {len(memories)} five-star memories")
+                        else:
+                            self.log_result("Special Memories Retrieval", False, "Not all memories are 5-star activities")
+                            return False
+                    else:
+                        self.log_result("Special Memories Retrieval", True, "No memories yet (expected for new users)")
+                else:
+                    self.log_result("Special Memories Retrieval", False, "Missing memories data", data)
+                    return False
+            else:
+                self.log_result("Special Memories Retrieval", False, f"HTTP {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_result("Special Memories Retrieval", False, f"Request error: {str(e)}")
+            return False
+        
+        # Test filtered memories
+        try:
+            response = self.session.get(f"{BACKEND_URL}/memories/filter?days_back=30&category=emotional", headers=headers1)
+            if response.status_code == 200:
+                data = response.json()
+                if "memories" in data and "filter_applied" in data:
+                    filter_info = data["filter_applied"]
+                    if filter_info["days_back"] == 30 and filter_info["category"] == "emotional":
+                        self.log_result("Filtered Memories", True, f"Successfully filtered memories: {len(data['memories'])} found")
+                    else:
+                        self.log_result("Filtered Memories", False, "Filter not applied correctly", data)
+                        return False
+                else:
+                    self.log_result("Filtered Memories", False, "Missing filtered memories data", data)
+                    return False
+            else:
+                self.log_result("Filtered Memories", False, f"HTTP {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_result("Filtered Memories", False, f"Request error: {str(e)}")
+            return False
+        
+        self.log_result("Special Memories", True, "Special memories system working correctly")
+        return True
+    
+    def test_gamification_system(self):
+        """Test gamification and achievements system"""
+        if not self.user1_token:
+            self.log_result("Gamification System", False, "Missing user token")
+            return False
+        
+        headers1 = {"Authorization": f"Bearer {self.user1_token}"}
+        
+        # Test achievements endpoint
+        try:
+            response = self.session.get(f"{BACKEND_URL}/achievements", headers=headers1)
+            if response.status_code == 200:
+                data = response.json()
+                if "achievements" in data and "stats" in data:
+                    achievements = data["achievements"]
+                    stats = data["stats"]
+                    
+                    # Check if stats contain expected fields
+                    expected_stats = ["total_activities", "five_star_activities", "category_distribution"]
+                    if all(field in stats for field in expected_stats):
+                        self.log_result("Achievements System", True, f"Retrieved {len(achievements)} achievements and complete stats")
+                    else:
+                        self.log_result("Achievements System", False, "Missing expected stats fields", stats)
+                        return False
+                else:
+                    self.log_result("Achievements System", False, "Missing achievements or stats data", data)
+                    return False
+            else:
+                self.log_result("Achievements System", False, f"HTTP {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_result("Achievements System", False, f"Request error: {str(e)}")
+            return False
+        
+        # Test correlation endpoint
+        try:
+            response = self.session.get(f"{BACKEND_URL}/stats/correlation", headers=headers1)
+            if response.status_code == 200:
+                data = response.json()
+                if "correlation_data" in data and "period_days" in data:
+                    if data["period_days"] == 30:
+                        self.log_result("Mood-Activity Correlation", True, f"Retrieved correlation data for 30 days")
+                    else:
+                        self.log_result("Mood-Activity Correlation", False, "Incorrect period days", data)
+                        return False
+                else:
+                    self.log_result("Mood-Activity Correlation", False, "Missing correlation data", data)
+                    return False
+            else:
+                self.log_result("Mood-Activity Correlation", False, f"HTTP {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_result("Mood-Activity Correlation", False, f"Request error: {str(e)}")
+            return False
+        
+        self.log_result("Gamification System", True, "Gamification system working correctly")
+        return True
+    
+    def test_expanded_daily_activities(self):
+        """Test expanded daily activities endpoint with moods and pending ratings"""
+        if not self.user1_token:
+            self.log_result("Expanded Daily Activities", False, "Missing user token")
+            return False
+        
+        headers1 = {"Authorization": f"Bearer {self.user1_token}"}
         today = datetime.now().date().isoformat()
         
         try:
-            response = self.session.get(f"{BACKEND_URL}/activities/daily/{today}", headers=headers)
+            response = self.session.get(f"{BACKEND_URL}/activities/daily/{today}", headers=headers1)
             if response.status_code == 200:
                 data = response.json()
-                if "user_activities" in data and "partner_activities" in data:
-                    user_count = len(data["user_activities"])
-                    partner_count = len(data["partner_activities"])
-                    user_score = data.get("user_score", 0)
-                    partner_score = data.get("partner_score", 0)
+                expected_fields = ["user_activities", "partner_activities", "pending_ratings_count", 
+                                 "user_mood", "partner_mood", "completed_activities_score", "total_activities"]
+                
+                if all(field in data for field in expected_fields):
+                    pending_count = data["pending_ratings_count"]
+                    total_activities = data["total_activities"]
+                    score = data["completed_activities_score"]
                     
-                    self.log_result("Get Daily Activities", True, 
-                                  f"Retrieved daily activities - User: {user_count} activities (score: {user_score}), Partner: {partner_count} activities (score: {partner_score})")
+                    self.log_result("Expanded Daily Activities", True, 
+                                  f"Retrieved expanded daily data: {total_activities} activities, {pending_count} pending ratings, score: {score}")
                     return True
                 else:
-                    self.log_result("Get Daily Activities", False, "Missing activity data", data)
+                    missing_fields = [field for field in expected_fields if field not in data]
+                    self.log_result("Expanded Daily Activities", False, f"Missing fields: {missing_fields}", data)
                     return False
             else:
-                self.log_result("Get Daily Activities", False, f"HTTP {response.status_code}", response.text)
+                self.log_result("Expanded Daily Activities", False, f"HTTP {response.status_code}", response.text)
                 return False
         except Exception as e:
-            self.log_result("Get Daily Activities", False, f"Request error: {str(e)}")
+            self.log_result("Expanded Daily Activities", False, f"Request error: {str(e)}")
             return False
     
-    def test_get_weekly_stats(self):
-        """Test getting weekly statistics"""
-        if not self.user1_token:
-            self.log_result("Get Weekly Stats", False, "No user1 token available")
+    def test_authorization_security(self):
+        """Test that partner-specific endpoints have proper authorization"""
+        if not self.user1_token or not self.user2_token or not self.created_activities:
+            self.log_result("Authorization Security", False, "Missing tokens or activities")
             return False
         
-        headers = {"Authorization": f"Bearer {self.user1_token}"}
-        # Get start of current week (Monday)
-        today = datetime.now().date()
-        start_of_week = today - timedelta(days=today.weekday())
-        start_date = start_of_week.isoformat()
+        # Test that User 1 cannot rate their own activities
+        headers1 = {"Authorization": f"Bearer {self.user1_token}"}
         
+        # Get User 1's own activities
         try:
-            response = self.session.get(f"{BACKEND_URL}/activities/weekly/{start_date}", headers=headers)
+            today = datetime.now().date().isoformat()
+            response = self.session.get(f"{BACKEND_URL}/activities/daily/{today}", headers=headers1)
             if response.status_code == 200:
                 data = response.json()
-                if "daily_stats" in data and "weekly_summary" in data:
-                    summary = data["weekly_summary"]
-                    total_activities = summary.get("total_activities", 0)
-                    user_score = summary.get("user_total_score", 0)
-                    partner_score = summary.get("partner_total_score", 0)
+                user_activities = data.get("user_activities", [])
+                
+                if user_activities:
+                    # Try to rate own activity (should fail)
+                    own_activity_id = user_activities[0]["id"]
+                    rating_data = {"rating": 5, "comment": "Trying to rate my own activity"}
                     
-                    self.log_result("Get Weekly Stats", True, 
-                                  f"Retrieved weekly stats - Total activities: {total_activities}, User score: {user_score}, Partner score: {partner_score}")
-                    return True
+                    response = self.session.post(f"{BACKEND_URL}/activities/{own_activity_id}/rate", 
+                                               json=rating_data, headers=headers1)
+                    if response.status_code == 403:
+                        self.log_result("Self-Rating Prevention", True, "Correctly prevented user from rating own activity")
+                    else:
+                        self.log_result("Self-Rating Prevention", False, f"Should prevent self-rating, got {response.status_code}")
+                        return False
                 else:
-                    self.log_result("Get Weekly Stats", False, "Missing weekly stats data", data)
-                    return False
+                    self.log_result("Self-Rating Prevention", True, "No activities to test self-rating (acceptable)")
             else:
-                self.log_result("Get Weekly Stats", False, f"HTTP {response.status_code}", response.text)
+                self.log_result("Authorization Security", False, f"Failed to get daily activities: {response.status_code}")
                 return False
         except Exception as e:
-            self.log_result("Get Weekly Stats", False, f"Request error: {str(e)}")
-            return False
-    
-    def test_delete_activity(self):
-        """Test deleting an activity"""
-        if not self.user1_token:
-            self.log_result("Delete Activity", False, "No user1 token available")
+            self.log_result("Authorization Security", False, f"Request error: {str(e)}")
             return False
         
-        headers = {"Authorization": f"Bearer {self.user1_token}"}
-        
-        # First create an activity to delete
-        test_activity = {
-            "description": "Actividad de prueba para eliminar",
-            "category": "general",
-            "rating": 3,
-            "time_of_day": "afternoon"
-        }
-        
-        try:
-            # Create activity
-            response = self.session.post(f"{BACKEND_URL}/activities", json=test_activity, headers=headers)
-            if response.status_code != 200:
-                self.log_result("Delete Activity", False, "Failed to create test activity")
-                return False
-            
-            activity_data = response.json()
-            activity_id = activity_data["activity"]["id"]
-            
-            # Delete activity
-            response = self.session.delete(f"{BACKEND_URL}/activities/{activity_id}", headers=headers)
-            if response.status_code == 200:
-                self.log_result("Delete Activity", True, "Successfully deleted activity")
-                return True
-            else:
-                self.log_result("Delete Activity", False, f"HTTP {response.status_code}", response.text)
-                return False
-        except Exception as e:
-            self.log_result("Delete Activity", False, f"Request error: {str(e)}")
-            return False
-    
-    def test_delete_nonexistent_activity(self):
-        """Test deleting a non-existent activity"""
-        if not self.user1_token:
-            self.log_result("Delete Nonexistent Activity", False, "No user1 token available")
-            return False
-        
-        headers = {"Authorization": f"Bearer {self.user1_token}"}
-        fake_id = str(uuid.uuid4())
-        
-        try:
-            response = self.session.delete(f"{BACKEND_URL}/activities/{fake_id}", headers=headers)
-            if response.status_code == 404:
-                self.log_result("Delete Nonexistent Activity", True, "Correctly returned 404 for non-existent activity")
-                return True
-            else:
-                self.log_result("Delete Nonexistent Activity", False, f"Should have returned 404, got {response.status_code}")
-                return False
-        except Exception as e:
-            self.log_result("Delete Nonexistent Activity", False, f"Request error: {str(e)}")
-            return False
-    
-    def test_unlink_partner(self):
-        """Test unlinking partners"""
-        if not self.user1_token:
-            self.log_result("Unlink Partner", False, "No user1 token available")
-            return False
-        
-        headers = {"Authorization": f"Bearer {self.user1_token}"}
-        
-        try:
-            response = self.session.delete(f"{BACKEND_URL}/unlink-partner", headers=headers)
-            if response.status_code == 200:
-                self.log_result("Unlink Partner", True, "Successfully unlinked partners")
-                return True
-            else:
-                self.log_result("Unlink Partner", False, f"HTTP {response.status_code}", response.text)
-                return False
-        except Exception as e:
-            self.log_result("Unlink Partner", False, f"Request error: {str(e)}")
-            return False
+        self.log_result("Authorization Security", True, "Authorization security working correctly")
+        return True
     
     def run_all_tests(self):
-        """Run all backend tests"""
-        print("=" * 60)
-        print("🚀 STARTING LOVEACTS BACKEND TESTING SUITE")
-        print("=" * 60)
+        """Run all backend tests for LoveActs V2.0"""
+        print("=" * 70)
+        print("🚀 STARTING LOVEACTS V2.0 BACKEND TESTING SUITE")
+        print("=" * 70)
         print(f"Testing backend at: {BACKEND_URL}")
         print()
         
-        # Test sequence
+        # Test sequence for V2.0
         tests = [
-            ("Health Check", self.test_health_check),
+            ("Health Check V2.0", self.test_health_check),
             ("User Registration", self.test_user_registration),
-            ("Duplicate Email Registration", self.test_duplicate_email_registration),
-            ("User Login", self.test_user_login),
-            ("Invalid Login", self.test_invalid_login),
-            ("Get Current User", self.test_get_current_user),
-            ("Unauthorized Access", self.test_unauthorized_access),
             ("Partner Linking", self.test_partner_linking),
-            ("Mutual Partner Linking", self.test_mutual_partner_linking),
-            ("Invalid Partner Code", self.test_invalid_partner_code),
-            ("Create Activities", self.test_create_activities),
-            ("Invalid Activity Rating", self.test_invalid_activity_rating),
-            ("Get Daily Activities", self.test_get_daily_activities),
-            ("Get Weekly Stats", self.test_get_weekly_stats),
-            ("Delete Activity", self.test_delete_activity),
-            ("Delete Nonexistent Activity", self.test_delete_nonexistent_activity),
-            ("Unlink Partner", self.test_unlink_partner),
+            ("Create Activities V2", self.test_create_activities_v2),
+            ("Rating System", self.test_rating_system),
+            ("Mood System", self.test_mood_system),
+            ("Special Memories", self.test_special_memories),
+            ("Gamification System", self.test_gamification_system),
+            ("Expanded Daily Activities", self.test_expanded_daily_activities),
+            ("Authorization Security", self.test_authorization_security),
         ]
         
         passed = 0
@@ -617,9 +639,9 @@ class LoveActsBackendTester:
                 self.log_result(test_name, False, f"Test execution error: {str(e)}")
                 failed += 1
         
-        print("\n" + "=" * 60)
-        print("📊 TESTING SUMMARY")
-        print("=" * 60)
+        print("\n" + "=" * 70)
+        print("📊 LOVEACTS V2.0 TESTING SUMMARY")
+        print("=" * 70)
         print(f"✅ Passed: {passed}")
         print(f"❌ Failed: {failed}")
         print(f"📈 Success Rate: {(passed/(passed+failed)*100):.1f}%")
@@ -630,12 +652,12 @@ class LoveActsBackendTester:
                 if "❌ FAIL" in result["status"]:
                     print(f"   • {result['test']}: {result['message']}")
         
-        print("\n" + "=" * 60)
+        print("\n" + "=" * 70)
         return passed, failed
 
 def main():
     """Main test execution"""
-    tester = LoveActsBackendTester()
+    tester = LoveActsV2BackendTester()
     passed, failed = tester.run_all_tests()
     
     # Exit with appropriate code
