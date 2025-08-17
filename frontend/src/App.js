@@ -697,6 +697,7 @@ const Dashboard = () => {
         setShowPartnerModal(false);
         setPartnerCode('');
         fetchUserInfo();
+        fetchTotalStats(); // Actualizar estadísticas después de vincular
         setTimeout(() => setSuccess(''), 3000);
       } else {
         setError(data.detail);
@@ -705,6 +706,63 @@ const Dashboard = () => {
       setError('Error de conexión');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUpdatePartnerInfo = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const updateData = {};
+      if (editPartnerData.custom_name.trim()) {
+        updateData.custom_name = editPartnerData.custom_name.trim();
+      }
+      if (editPartnerData.photo) {
+        updateData.photo = editPartnerData.photo;
+      }
+
+      const response = await fetch(`${API_URL}/api/partner-info`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess('¡Información de pareja actualizada!');
+        setShowEditPartnerModal(false);
+        setEditPartnerData({ custom_name: '', photo: '' });
+        fetchUserInfo();
+        setTimeout(() => setSuccess(''), 3000);
+      } else {
+        setError(data.detail);
+      }
+    } catch (error) {
+      setError('Error de conexión');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePhotoUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        setError('La imagen debe ser menor a 5MB');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setEditPartnerData({ ...editPartnerData, photo: e.target.result });
+      };
+      reader.readAsDataURL(file);
     }
   };
 
