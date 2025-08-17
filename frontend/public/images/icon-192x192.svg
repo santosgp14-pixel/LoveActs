@@ -1,0 +1,10 @@
+<svg width="192" height="192" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ec4899;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="48" fill="url(#gradient)"/>
+  <text x="96" y="130" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="96" text-anchor="middle" fill="white" filter="drop-shadow(0 4px 8px rgba(0,0,0,0.3))">💕</text>
+</svg>
