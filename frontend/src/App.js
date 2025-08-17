@@ -1662,67 +1662,79 @@ const Dashboard = () => {
         {currentView === 'profile' && renderProfileView()}
       </main>
 
-      {/* Navegación inferior expandida - 5 secciones */}
+      {/* Navegación inferior expandida - 6 secciones ACTUALIZADA */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-pink-100 shadow-lg">
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="max-w-6xl mx-auto px-2">
           <div className="flex justify-around py-2">
             <button
               onClick={() => setCurrentView('home')}
-              className={`flex flex-col items-center py-2 px-3 rounded-lg transition duration-200 ${
+              className={`flex flex-col items-center py-2 px-2 rounded-lg transition duration-200 ${
                 currentView === 'home' 
                   ? 'text-pink-600 bg-pink-50' 
                   : 'text-gray-600 hover:text-pink-600 hover:bg-pink-50'
               }`}
             >
-              <span className="text-xl mb-1">🏠</span>
+              <span className="text-lg mb-1">🏠</span>
               <span className="text-xs font-medium">Inicio</span>
             </button>
 
             <button
               onClick={() => setCurrentView('add')}
-              className={`flex flex-col items-center py-2 px-3 rounded-lg transition duration-200 ${
+              className={`flex flex-col items-center py-2 px-2 rounded-lg transition duration-200 ${
                 currentView === 'add' 
                   ? 'text-pink-600 bg-pink-50' 
                   : 'text-gray-600 hover:text-pink-600 hover:bg-pink-50'
               }`}
             >
-              <span className="text-xl mb-1">➕</span>
+              <span className="text-lg mb-1">➕</span>
               <span className="text-xs font-medium">Añadir</span>
             </button>
 
             <button
               onClick={() => setCurrentView('partner')}
-              className={`flex flex-col items-center py-2 px-3 rounded-lg transition duration-200 ${
+              className={`flex flex-col items-center py-2 px-2 rounded-lg transition duration-200 ${
                 currentView === 'partner' 
                   ? 'text-pink-600 bg-pink-50' 
                   : 'text-gray-600 hover:text-pink-600 hover:bg-pink-50'
               }`}
             >
-              <span className="text-xl mb-1">💑</span>
-              <span className="text-xs font-medium">Mi Pareja</span>
+              <span className="text-lg mb-1">💑</span>
+              <span className="text-xs font-medium">Pareja</span>
             </button>
 
             <button
               onClick={() => setCurrentView('memories')}
-              className={`flex flex-col items-center py-2 px-3 rounded-lg transition duration-200 ${
+              className={`flex flex-col items-center py-2 px-2 rounded-lg transition duration-200 ${
                 currentView === 'memories' 
                   ? 'text-pink-600 bg-pink-50' 
                   : 'text-gray-600 hover:text-pink-600 hover:bg-pink-50'
               }`}
             >
-              <span className="text-xl mb-1">🎭</span>
+              <span className="text-lg mb-1">🎭</span>
               <span className="text-xs font-medium">Recuerdos</span>
             </button>
 
             <button
+              onClick={() => setCurrentView('history')}
+              className={`flex flex-col items-center py-2 px-2 rounded-lg transition duration-200 ${
+                currentView === 'history' 
+                  ? 'text-pink-600 bg-pink-50' 
+                  : 'text-gray-600 hover:text-pink-600 hover:bg-pink-50'
+              }`}
+            >
+              <span className="text-lg mb-1">📚</span>
+              <span className="text-xs font-medium">Historial</span>
+            </button>
+
+            <button
               onClick={() => setCurrentView('profile')}
-              className={`flex flex-col items-center py-2 px-3 rounded-lg transition duration-200 ${
+              className={`flex flex-col items-center py-2 px-2 rounded-lg transition duration-200 ${
                 currentView === 'profile' 
                   ? 'text-pink-600 bg-pink-50' 
                   : 'text-gray-600 hover:text-pink-600 hover:bg-pink-50'
               }`}
             >
-              <span className="text-xl mb-1">👤</span>
+              <span className="text-lg mb-1">👤</span>
               <span className="text-xs font-medium">Perfil</span>
             </button>
           </div>
