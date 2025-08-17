@@ -134,26 +134,15 @@ const PWAInstallButton = () => {
   );
 };
 
-// Componente Update Available
-const UpdateAvailableNotification = () => {
-  const { updateAvailable, updateApp } = usePWA();
+// Componente Offline Indicator  
+const OfflineIndicator = () => {
+  const { isOnline } = usePWA();
 
-  if (!updateAvailable) return null;
+  if (isOnline) return null;
 
   return (
-    <div className="fixed bottom-20 left-4 right-4 bg-gradient-to-r from-green-500 to-blue-500 text-white p-4 rounded-lg shadow-lg z-50">
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <h4 className="font-semibold text-sm">¡Actualización Disponible!</h4>
-          <p className="text-xs opacity-90">Nueva versión de LoveActs lista</p>
-        </div>
-        <button
-          onClick={updateApp}
-          className="bg-white text-green-600 px-4 py-2 rounded font-medium text-sm hover:bg-gray-100 transition-colors ml-4"
-        >
-          Actualizar
-        </button>
-      </div>
+    <div className="fixed top-4 left-4 bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 text-sm font-semibold">
+      📵 Modo Offline
     </div>
   );
 };
