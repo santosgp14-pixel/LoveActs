@@ -2,7 +2,7 @@
   "name": "LoveActs - Actos de Amor Diarios",
   "short_name": "LoveActs",
   "description": "Aplicación romántica para parejas que registran y califican actos de amor diarios, con estados de ánimo y recuerdos especiales.",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "lang": "es-ES",
   "start_url": "/",
   "display": "standalone",
