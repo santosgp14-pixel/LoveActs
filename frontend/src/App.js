@@ -801,7 +801,7 @@ const Dashboard = () => {
       <div className="bg-white rounded-xl shadow-lg p-6 border border-pink-100">
         {/* Fecha actual más discreta - MODIFICADA */}
         <div className="text-center mb-6">
-          <h2 className="text-lg font-semibold text-gray-700 mb-2">
+          <h2 className="text-base font-semibold text-gray-700 mb-2">
             📅 {new Date().toLocaleDateString('es-ES', { 
               weekday: 'long', 
               year: 'numeric', 
