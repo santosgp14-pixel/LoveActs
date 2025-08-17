@@ -1767,7 +1767,7 @@ const Dashboard = () => {
       {/* Información de versión y estado - MOVIDA AL FINAL */}
       <div className="bg-white rounded-xl shadow-lg p-4 border border-pink-100 text-center">
         <div className="flex items-center justify-center gap-2">
-          <p className="text-xs text-pink-600">✨ Versión PWA 2.0</p>
+          <p className="text-xs text-pink-600">✨ Versión PWA 2.2</p>
           {isInstalled && (
             <div className="flex items-center gap-1">
               <div className="w-2 h-2 bg-green-400 rounded-full"></div>
