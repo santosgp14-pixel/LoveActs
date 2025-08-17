@@ -1309,7 +1309,7 @@ const Dashboard = () => {
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-lg">{getCategoryIcon(activity.category)}</span>
                         <span className="text-sm font-medium text-blue-700 capitalize">
-                          {activity.category}
+                          {getCategoryName(activity.category)}
                         </span>
                         <span className="text-sm text-gray-500">• {activity.date}</span>
                       </div>
