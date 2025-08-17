@@ -1312,6 +1312,7 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-white to-blue-100">
       <PWAInstallButton />
       <OfflineIndicator />
+      <UpdateAvailableNotification />
       
       {/* Header */}
       <header className="bg-white shadow-lg border-b border-pink-100 sticky top-0 z-10">
