@@ -1937,7 +1937,7 @@ const Dashboard = () => {
               </h4>
               <p className="text-blue-700">"{selectedActivity.description}"</p>
               <p className="text-sm text-blue-600 mt-2">
-                {getCategoryIcon(selectedActivity.category)} {selectedActivity.category} • {selectedActivity.date}
+                {getCategoryIcon(selectedActivity.category)} {getCategoryName(selectedActivity.category)} • {selectedActivity.date}
               </p>
             </div>
 
