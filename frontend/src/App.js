@@ -793,14 +793,14 @@ const Dashboard = () => {
     { level: 10, emoji: '🤩', label: 'Eufórico/a' }
   ];
 
-  // Vista Home Expandida - MODIFICADA según requisitos
+  // Vista Home Expandida - MODIFICADA según nuevos requisitos
   const renderHomeView = () => (
     <div className="space-y-6">
-      {/* Header con fecha actual y estado de ánimo - NUEVO DISEÑO */}
+      {/* Header con fecha actual y estado de ánimo - REDISEÑADO */}
       <div className="bg-white rounded-xl shadow-lg p-6 border border-pink-100">
-        {/* Fecha actual prominente */}
+        {/* Fecha actual más discreta - MODIFICADA */}
         <div className="text-center mb-6">
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">
+          <h2 className="text-lg font-semibold text-gray-700 mb-2">
             📅 {new Date().toLocaleDateString('es-ES', { 
               weekday: 'long', 
               year: 'numeric', 
@@ -811,18 +811,21 @@ const Dashboard = () => {
           <p className="text-gray-600 text-sm">¡Un nuevo día para demostrar amor!</p>
         </div>
 
-        {/* Selector de estado de ánimo - Justo debajo de la fecha */}
+        {/* Selector de estado de ánimo como dropdown - MODIFICADO */}
         <div className="flex justify-center mb-6">
-          <button
-            onClick={() => setShowMoodModal(true)}
-            className="bg-purple-500 text-white px-6 py-3 rounded-lg hover:bg-purple-600 transition duration-200 flex items-center gap-2"
-          >
-            <span className="text-xl">{userMood ? userMood.mood_emoji : '😊'}</span>
-            <span>Mi Estado de Ánimo</span>
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setShowMoodModal(true)}
+              className="bg-purple-500 text-white px-6 py-3 rounded-lg hover:bg-purple-600 transition duration-200 flex items-center gap-2"
+            >
+              <span className="text-xl">{userMood ? userMood.mood_emoji : '😊'}</span>
+              <span>Mi Estado de Ánimo</span>
+              <span className="text-sm">▼</span>
+            </button>
+          </div>
         </div>
 
-        {/* Total Acciones - NUEVO */}
+        {/* Total Acciones - MANTENIDO */}
         {totalStats && (
           <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg p-4 mb-6 border border-yellow-200">
             <div className="text-center">
@@ -855,7 +858,12 @@ const Dashboard = () => {
             {userMood ? (
               <>
                 <div className="text-3xl">{userMood.mood_emoji}</div>
-                <div className="text-sm text-purple-700">{userMood.note || 'Sin nota'}</div>
+                <div className="text-sm text-purple-700">
+                  Nivel: {userMood.mood_level}/10
+                </div>
+                {userMood.note && (
+                  <div className="text-sm text-purple-700 mt-1">"{userMood.note}"</div>
+                )}
               </>
             ) : (
               <div className="text-gray-500 text-sm">No registrado hoy</div>
@@ -866,7 +874,12 @@ const Dashboard = () => {
             {partnerMood ? (
               <>
                 <div className="text-3xl">{partnerMood.mood_emoji}</div>
-                <div className="text-sm text-indigo-700">{partnerMood.note || 'Sin nota'}</div>
+                <div className="text-sm text-indigo-700">
+                  Nivel: {partnerMood.mood_level}/10
+                </div>
+                {partnerMood.note && (
+                  <div className="text-sm text-indigo-700 mt-1">"{partnerMood.note}"</div>
+                )}
               </>
             ) : (
               <div className="text-gray-500 text-sm">
@@ -877,10 +890,10 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Accesos rápidos */}
+      {/* Accesos rápidos - MODIFICADO (sin Comparar) */}
       <div className="bg-white rounded-xl shadow-lg p-6 border border-pink-100">
         <h3 className="text-xl font-bold text-gray-800 mb-4">🚀 Accesos Rápidos</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <button
             onClick={() => setCurrentView('add')}
             className="bg-green-500 text-white p-4 rounded-lg hover:bg-green-600 transition duration-200 text-center"
@@ -914,44 +927,43 @@ const Dashboard = () => {
             <div className="text-2xl mb-1">📚</div>
             <div className="text-sm font-medium">Historial</div>
           </button>
-          
-          <button
-            onClick={() => setCurrentView('compare')}
-            className="bg-orange-500 text-white p-4 rounded-lg hover:bg-orange-600 transition duration-200 text-center"
-          >
-            <div className="text-2xl mb-1">📊</div>
-            <div className="text-sm font-medium">Comparar</div>
-          </button>
         </div>
       </div>
 
-      {/* Resumen rápido de actividades de HOY */}
+      {/* Resumen rápido de actividades de HOY - MODIFICADO con corazón roto */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Tus actividades */}
         <div className="bg-white rounded-xl shadow-lg p-6 border border-pink-100">
           <h3 className="text-xl font-bold text-gray-800 mb-4">🌟 Tus Actos de Hoy</h3>
-          {activities.slice(0, 3).map((activity) => (
-            <div key={activity.id} className="bg-pink-50 rounded-lg p-3 mb-3 border-l-4 border-pink-400">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span>{getCategoryIcon(activity.category)}</span>
-                    <span className="text-sm font-medium text-pink-700">
-                      {activity.category}
-                    </span>
+          {activities.length > 0 ? (
+            activities.slice(0, 3).map((activity) => (
+              <div key={activity.id} className="bg-pink-50 rounded-lg p-3 mb-3 border-l-4 border-pink-400">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span>{getCategoryIcon(activity.category)}</span>
+                      <span className="text-sm font-medium text-pink-700">
+                        {activity.category}
+                      </span>
+                    </div>
+                    <p className="text-gray-700 text-sm">{activity.description}</p>
                   </div>
-                  <p className="text-gray-700 text-sm">{activity.description}</p>
-                </div>
-                <div className="text-right">
-                  <div className="text-xs">{getStarRating(activity.rating)}</div>
+                  <div className="text-right">
+                    <div className="text-xs">{getStarRating(activity.rating)}</div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-          {activities.length === 0 && (
-            <div className="text-center py-4 text-gray-500">
-              <div className="text-2xl mb-2">💝</div>
+            ))
+          ) : (
+            <div className="text-center py-6 text-gray-500">
+              <div className="text-4xl mb-2">💔</div>
               <p className="text-sm">Aún no has registrado actos hoy</p>
+              <button
+                onClick={() => setCurrentView('add')}
+                className="mt-3 text-pink-600 hover:text-pink-700 font-medium text-sm"
+              >
+                ¡Registra tu primer acto!
+              </button>
             </div>
           )}
         </div>
@@ -959,28 +971,39 @@ const Dashboard = () => {
         {/* Actividades de pareja */}
         <div className="bg-white rounded-xl shadow-lg p-6 border border-blue-100">
           <h3 className="text-xl font-bold text-gray-800 mb-4">💙 Actos de tu Pareja Hoy</h3>
-          {partnerActivities.slice(0, 3).map((activity) => (
-            <div key={activity.id} className="bg-blue-50 rounded-lg p-3 mb-3 border-l-4 border-blue-400">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span>{getCategoryIcon(activity.category)}</span>
-                    <span className="text-sm font-medium text-blue-700">
-                      {activity.category}
-                    </span>
+          {partnerActivities.length > 0 ? (
+            partnerActivities.slice(0, 3).map((activity) => (
+              <div key={activity.id} className="bg-blue-50 rounded-lg p-3 mb-3 border-l-4 border-blue-400">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span>{getCategoryIcon(activity.category)}</span>
+                      <span className="text-sm font-medium text-blue-700">
+                        {activity.category}
+                      </span>
+                    </div>
+                    <p className="text-gray-700 text-sm">{activity.description}</p>
                   </div>
-                  <p className="text-gray-700 text-sm">{activity.description}</p>
-                </div>
-                <div className="text-right">
-                  <div className="text-xs">{getStarRating(activity.rating)}</div>
+                  <div className="text-right">
+                    <div className="text-xs">{getStarRating(activity.rating)}</div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-          {partnerActivities.length === 0 && (
-            <div className="text-center py-4 text-gray-500">
-              <div className="text-2xl mb-2">💙</div>
-              <p className="text-sm">{user?.partner_id ? 'Tu pareja aún no ha registrado actos hoy' : 'Sin pareja vinculada'}</p>
+            ))
+          ) : (
+            <div className="text-center py-6 text-gray-500">
+              <div className="text-4xl mb-2">💔</div>
+              <p className="text-sm">
+                {user?.partner_id ? 'Tu pareja aún no ha registrado actos hoy' : 'Sin pareja vinculada'}
+              </p>
+              {!user?.partner_id && (
+                <button
+                  onClick={() => setCurrentView('profile')}
+                  className="mt-3 text-blue-600 hover:text-blue-700 font-medium text-sm"
+                >
+                  Vincular pareja
+                </button>
+              )}
             </div>
           )}
         </div>
