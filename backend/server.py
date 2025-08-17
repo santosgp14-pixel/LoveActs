@@ -180,6 +180,44 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
 def generate_partner_code() -> str:
     return str(uuid.uuid4())[:8].upper()
 
+# Función para enviar notificaciones push
+async def send_push_notification(user_id: str, notification: NotificationMessage):
+    """Envía una notificación push a un usuario específico"""
+    try:
+        # Buscar suscripciones de notificaciones del usuario
+        subscriptions = list(db.notification_subscriptions.find({"user_id": user_id}))
+        
+        for subscription in subscriptions:
+            try:
+                # En una implementación real, aquí usarías una librería como pywebpush
+                # Por ahora, guardamos la notificación en la base de datos para mostrar en la app
+                notification_doc = {
+                    "id": str(uuid.uuid4()),
+                    "user_id": user_id,
+                    "title": notification.title,
+                    "body": notification.body,
+                    "icon": notification.icon,
+                    "tag": notification.tag,
+                    "data": notification.data,
+                    "read": False,
+                    "created_at": datetime.now(timezone.utc)
+                }
+                
+                db.notifications.insert_one(notification_doc)
+                print(f"💌 Notificación guardada para usuario {user_id}: {notification.title}")
+                
+            except Exception as e:
+                print(f"❌ Error enviando notificación individual: {e}")
+                continue
+                
+    except Exception as e:
+        print(f"❌ Error en send_push_notification: {e}")
+
+async def notify_partner(current_user, notification: NotificationMessage):
+    """Notifica a la pareja del usuario actual"""
+    if current_user.get("partner_id"):
+        await send_push_notification(current_user["partner_id"], notification)
+
 def get_partner_info(user):
     """Obtiene información de la pareja del usuario"""
     if not user.get("partner_id"):
