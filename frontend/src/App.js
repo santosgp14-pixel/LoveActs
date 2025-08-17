@@ -592,8 +592,7 @@ const Dashboard = () => {
       if (response.ok) {
         setNewActivity({
           description: '',
-          category: 'general',
-          time_of_day: ''
+          category: 'general'
         });
         setSuccess('¡Actividad registrada! Tu pareja podrá calificarla.');
         fetchDailyData();
