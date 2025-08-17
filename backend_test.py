@@ -648,7 +648,91 @@ class LoveActsV2BackendTester:
         self.log_result("Authorization Security", True, "Authorization security working correctly")
         return True
     
-    def run_all_tests(self):
+    def test_with_existing_user(self):
+        """Test mood system with existing test user credentials"""
+        # Use provided test credentials
+        test_user_payload = {
+            "email": "test@example.com",
+            "password": "password123"
+        }
+        
+        try:
+            response = self.session.post(f"{BACKEND_URL}/login", json=test_user_payload)
+            if response.status_code == 200:
+                data = response.json()
+                if "token" in data:
+                    test_token = data["token"]
+                    self.log_result("Test User Login", True, "Successfully logged in with test credentials")
+                    
+                    # Test mood creation with test user
+                    headers = {"Authorization": f"Bearer {test_token}"}
+                    
+                    # Test various mood IDs as requested
+                    test_moods = [
+                        {"mood_id": "happy", "mood_emoji": "😊", "note": "Feeling great today!"},
+                        {"mood_id": "horny", "mood_emoji": "😈", "note": "Feeling frisky"},
+                        {"mood_id": "bored", "mood_emoji": "😴", "note": "Nothing exciting happening"},
+                        {"mood_id": "sleepy", "mood_emoji": "😪", "note": "Need more rest"},
+                        {"mood_id": "excited", "mood_emoji": "🤩", "note": "Something amazing happened"},
+                        {"mood_id": "romantic", "mood_emoji": "🥰", "note": "Thinking of my partner"}
+                    ]
+                    
+                    for mood_data in test_moods:
+                        try:
+                            response = self.session.post(f"{BACKEND_URL}/mood", json=mood_data, headers=headers)
+                            if response.status_code == 200:
+                                data = response.json()
+                                if data.get("mood_id") == mood_data["mood_id"]:
+                                    self.log_result(f"Test User Mood '{mood_data['mood_id']}'", True, f"Successfully created/updated mood: {mood_data['mood_id']}")
+                                else:
+                                    self.log_result(f"Test User Mood '{mood_data['mood_id']}'", False, "Mood ID mismatch", data)
+                                    return False
+                            else:
+                                self.log_result(f"Test User Mood '{mood_data['mood_id']}'", False, f"HTTP {response.status_code}", response.text)
+                                return False
+                        except Exception as e:
+                            self.log_result(f"Test User Mood '{mood_data['mood_id']}'", False, f"Request error: {str(e)}")
+                            return False
+                    
+                    # Test mood retrieval
+                    try:
+                        today = datetime.now().date().isoformat()
+                        start_of_week = (datetime.now().date() - timedelta(days=datetime.now().date().weekday())).isoformat()
+                        
+                        response = self.session.get(f"{BACKEND_URL}/mood/weekly/{start_of_week}", headers=headers)
+                        if response.status_code == 200:
+                            data = response.json()
+                            if "user_moods" in data:
+                                user_moods = [mood for mood in data["user_moods"] if mood is not None]
+                                if user_moods:
+                                    latest_mood = user_moods[-1]
+                                    if "mood_id" in latest_mood:
+                                        self.log_result("Test User Mood Retrieval", True, f"Successfully retrieved mood with mood_id: {latest_mood['mood_id']}")
+                                    else:
+                                        self.log_result("Test User Mood Retrieval", False, "Retrieved mood missing mood_id field", latest_mood)
+                                        return False
+                                else:
+                                    self.log_result("Test User Mood Retrieval", True, "No moods found for test user (acceptable)")
+                            else:
+                                self.log_result("Test User Mood Retrieval", False, "Missing user_moods in response", data)
+                                return False
+                        else:
+                            self.log_result("Test User Mood Retrieval", False, f"HTTP {response.status_code}", response.text)
+                            return False
+                    except Exception as e:
+                        self.log_result("Test User Mood Retrieval", False, f"Request error: {str(e)}")
+                        return False
+                    
+                    return True
+                else:
+                    self.log_result("Test User Login", False, "Missing token in response", data)
+                    return False
+            else:
+                self.log_result("Test User Login", False, f"HTTP {response.status_code} - User may not exist", response.text)
+                return False
+        except Exception as e:
+            self.log_result("Test User Login", False, f"Request error: {str(e)}")
+            return False
         """Run all backend tests for LoveActs V2.0"""
         print("=" * 70)
         print("🚀 STARTING LOVEACTS V2.0 BACKEND TESTING SUITE")
