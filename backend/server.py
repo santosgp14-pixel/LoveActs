@@ -779,7 +779,8 @@ async def get_mood_activity_correlation(current_user = Depends(get_current_user)
             
             correlation_data.append({
                 "date": date,
-                "partner_mood_level": partner_mood["mood_level"],
+                "partner_mood_id": partner_mood["mood_id"],
+                "partner_mood_emoji": partner_mood["mood_emoji"],
                 "your_activities_avg_rating": avg_activity_rating,
                 "activities_count": len(user_activities)
             })
