@@ -594,8 +594,9 @@ async def create_mood(mood_data: MoodCreate, current_user = Depends(get_current_
     if current_user.get("partner_id"):
         partner_name = current_user.get("partner_custom_name") or current_user["name"]
         mood_text = {
-            1: "muy mal 😢", 2: "mal 😔", 3: "neutral 😐", 
-            4: "bien 😊", 5: "excelente 🥰"
+            1: "devastado/a 😭", 2: "muy triste 😢", 3: "triste 😔", 
+            4: "neutral 😐", 5: "tranquilo/a 🙂", 6: "contento/a 😊",
+            7: "alegre 😄", 8: "enamorado/a 😍", 9: "radiante 🥰", 10: "eufórico/a 🤩"
         }.get(mood_data.mood_level, "diferente")
         
         notification = NotificationMessage(
