@@ -281,6 +281,82 @@ async def link_partner(request: LinkPartnerRequest, current_user = Depends(get_c
         "message": f"¡Vinculado exitosamente con {partner['name']}!",
         "partner_name": partner["name"]
     }
+@app.delete("/api/unlink-partner")
+async def unlink_partner(current_user = Depends(get_current_user)):
+    if not current_user.get("partner_id"):
+        raise HTTPException(status_code=400, detail="No tienes pareja vinculada")
+    
+    partner_id = current_user["partner_id"]
+    
+    # Desvincular parejas y limpiar datos personalizados
+    db.users.update_one(
+        {"id": current_user["id"]},
+        {"$set": {"partner_id": None}, "$unset": {"partner_custom_name": "", "partner_photo": ""}}
+    )
+    db.users.update_one(
+        {"id": partner_id},
+        {"$set": {"partner_id": None}, "$unset": {"partner_custom_name": "", "partner_photo": ""}}
+    )
+    
+    return {"message": "Pareja desvinculada exitosamente"}
+
+# Nuevos endpoints para personalización de pareja
+@app.put("/api/partner-info")
+async def update_partner_info(partner_info: UpdatePartnerInfo, current_user = Depends(get_current_user)):
+    if not current_user.get("partner_id"):
+        raise HTTPException(status_code=400, detail="No tienes pareja vinculada")
+    
+    update_data = {}
+    if partner_info.custom_name is not None:
+        update_data["partner_custom_name"] = partner_info.custom_name
+    if partner_info.photo is not None:
+        update_data["partner_photo"] = partner_info.photo
+    
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No se proporcionaron datos para actualizar")
+    
+    db.users.update_one(
+        {"id": current_user["id"]},
+        {"$set": update_data}
+    )
+    
+    return {
+        "message": "Información de pareja actualizada exitosamente",
+        "updated_fields": list(update_data.keys())
+    }
+
+@app.get("/api/stats/total")
+async def get_total_stats(current_user = Depends(get_current_user)):
+    """Obtiene estadísticas totales históricas del usuario y su pareja"""
+    
+    # Contar actividades del usuario
+    total_user_activities = db.activities.count_documents({"user_id": current_user["id"]})
+    
+    # Contar actividades de la pareja (si existe)
+    total_partner_activities = 0
+    if current_user.get("partner_id"):
+        total_partner_activities = db.activities.count_documents({"user_id": current_user["partner_id"]})
+    
+    # Total juntos
+    total_activities_together = total_user_activities + total_partner_activities
+    
+    # Calcular días de relación (desde que se vincularon o se registraron)
+    relationship_start = current_user["created_at"]
+    if current_user.get("partner_id"):
+        # Buscar cuándo se vincularon (aproximadamente cuando ambos se registraron)
+        partner = db.users.find_one({"id": current_user["partner_id"]})
+        if partner:
+            # Usar la fecha más reciente como inicio de la relación registrada
+            relationship_start = max(current_user["created_at"], partner["created_at"])
+    
+    relationship_days = (datetime.now(timezone.utc) - relationship_start).days + 1
+    
+    return TotalStatsResponse(
+        total_user_activities=total_user_activities,
+        total_partner_activities=total_partner_activities,
+        total_activities_together=total_activities_together,
+        relationship_days=relationship_days
+    )
 
 # Endpoints de Actividades EXPANDIDOS
 @app.post("/api/activities")
