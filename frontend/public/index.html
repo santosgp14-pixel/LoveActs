@@ -1,151 +1,275 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="description" content="A product of emergent.sh" />
-        <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-        <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-        <title>Emergent | Fullstack App</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        
+        <!-- PWA Meta Tags -->
+        <meta name="theme-color" content="#ec4899" />
+        <meta name="background-color" content="#fdf2f8" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="LoveActs" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="format-detection" content="telephone=no" />
+        
+        <!-- SEO and Description -->
+        <meta name="description" content="LoveActs - Aplicación romántica para parejas que registran y califican actos de amor diarios, con estados de ánimo y recuerdos especiales. Fortalece tu relación día a día." />
+        <meta name="keywords" content="amor, pareja, relación, romántico, actos de amor, estado de ánimo, recuerdos, romance" />
+        <meta name="author" content="LoveActs Team" />
+        
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://loveacts.app" />
+        <meta property="og:title" content="LoveActs - Actos de Amor Diarios" />
+        <meta property="og:description" content="Aplicación romántica para parejas que registran y califican actos de amor diarios" />
+        <meta property="og:image" content="/images/og-image.png" />
+        
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://loveacts.app" />
+        <meta property="twitter:title" content="LoveActs - Actos de Amor Diarios" />
+        <meta property="twitter:description" content="Aplicación romántica para parejas que registran y califican actos de amor diarios" />
+        <meta property="twitter:image" content="/images/twitter-image.png" />
+        
+        <!-- PWA Manifest -->
+        <link rel="manifest" href="/manifest.json" />
+        
+        <!-- Favicon and Icons -->
+        <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
+        <link rel="shortcut icon" href="/images/favicon.ico" />
+        
+        <!-- Apple Touch Icons -->
+        <link rel="apple-touch-icon" sizes="57x57" href="/images/apple-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="60x60" href="/images/apple-icon-60x60.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/images/apple-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-icon-76x76.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/images/apple-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/images/apple-icon-120x120.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/images/apple-icon-144x144.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/images/apple-icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png" />
+        
+        <!-- Microsoft Tiles -->
+        <meta name="msapplication-TileColor" content="#ec4899" />
+        <meta name="msapplication-TileImage" content="/images/ms-icon-144x144.png" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        
+        <!-- Preload Critical Resources -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        
+        <title>LoveActs - Actos de Amor Diarios 💕</title>
+        
+        <!-- Critical CSS -->
+        <style>
+            /* Critical loading styles */
+            .loading-screen {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, #fce7f3 0%, #ffffff 50%, #dbeafe 100%);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            }
+            .loading-logo {
+                font-size: 4rem;
+                margin-bottom: 1rem;
+                animation: pulse 2s infinite;
+            }
+            .loading-title {
+                font-size: 2rem;
+                font-weight: bold;
+                color: #ec4899;
+                margin-bottom: 0.5rem;
+            }
+            .loading-subtitle {
+                color: #6b7280;
+                font-size: 0.875rem;
+                margin-bottom: 2rem;
+            }
+            .loading-spinner {
+                width: 40px;
+                height: 40px;
+                border: 4px solid #fce7f3;
+                border-top: 4px solid #ec4899;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.1); opacity: 0.8; }
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            /* Hide main content until loaded */
+            #root { opacity: 0; transition: opacity 0.3s ease; }
+            .app-loaded #root { opacity: 1; }
+            .app-loaded .loading-screen { display: none; }
+        </style>
     </head>
     <body>
-        <noscript>You need to enable JavaScript to run this app.</noscript>
-        <div id="root"></div>
-        <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-        <a
-            id="emergent-badge"
-            target="_blank"
-            href="https://app.emergent.sh/?utm_source=emergent-badge"
-            style="
-                display: flex !important;
-                align-items: center !important;
-                position: fixed !important;
-                bottom: 20px;
-                right: 20px;
-                text-decoration: none;
-                padding: 6px 10px;
-                font-family: -apple-system, BlinkMacSystemFont,
-                    &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu, Cantarell,
-                    &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;,
-                    sans-serif !important;
-                font-size: 12px !important;
-                z-index: 9999 !important;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-                border-radius: 8px !important;
-                background-color: #ffffff !important;
-                border: 1px solid rgba(255, 255, 255, 0.25) !important;
-            "
-        >
-            <div
-                style="display: flex; flex-direction: row; align-items: center"
-            >
-                <img
-                    style="width: 20px; height: 20px; margin-right: 8px"
-                    src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4"
-                />
-                <p
-                    style="
-                        color: #000000;
-                        font-family: -apple-system, BlinkMacSystemFont,
-                            &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu,
-                            Cantarell, &quot;Open Sans&quot;,
-                            &quot;Helvetica Neue&quot;, sans-serif !important;
-                        font-size: 12px !important;
-                        align-items: center;
-                        margin-bottom: 0;
-                    "
-                >
-                    Made with Emergent
+        <!-- Loading Screen -->
+        <div class="loading-screen" id="loadingScreen">
+            <div class="loading-logo">💕</div>
+            <h1 class="loading-title">LoveActs</h1>
+            <p class="loading-subtitle">✨ Cargando tu app de amor...</p>
+            <div class="loading-spinner"></div>
+        </div>
+        
+        <noscript>
+            <div style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                background: linear-gradient(135deg, #fce7f3 0%, #ffffff 50%, #dbeafe 100%);
+                font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                text-align: center;
+                padding: 2rem;
+            ">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">💕</div>
+                <h1 style="color: #ec4899; margin-bottom: 1rem;">LoveActs</h1>
+                <p style="color: #6b7280; max-width: 400px;">
+                    Necesitas activar JavaScript en tu navegador para usar LoveActs.
+                    Esta aplicación requiere JavaScript para funcionar correctamente.
                 </p>
             </div>
-        </a>
+        </noscript>
+        
+        <div id="root"></div>
+        
+        <!-- PWA Installation Script -->
         <script>
-            !(function (t, e) {
-                var o, n, p, r;
-                e.__SV ||
-                    ((window.posthog = e),
-                    (e._i = []),
-                    (e.init = function (i, s, a) {
-                        function g(t, e) {
-                            var o = e.split(".");
-                            2 == o.length && ((t = t[o[0]]), (e = o[1])),
-                                (t[e] = function () {
-                                    t.push(
-                                        [e].concat(
-                                            Array.prototype.slice.call(
-                                                arguments,
-                                                0,
-                                            ),
-                                        ),
-                                    );
-                                });
-                        }
-                        ((p = t.createElement("script")).type =
-                            "text/javascript"),
-                            (p.crossOrigin = "anonymous"),
-                            (p.async = !0),
-                            (p.src =
-                                s.api_host.replace(
-                                    ".i.posthog.com",
-                                    "-assets.i.posthog.com",
-                                ) + "/static/array.js"),
-                            (r =
-                                t.getElementsByTagName(
-                                    "script",
-                                )[0]).parentNode.insertBefore(p, r);
-                        var u = e;
-                        for (
-                            void 0 !== a ? (u = e[a] = []) : (a = "posthog"),
-                                u.people = u.people || [],
-                                u.toString = function (t) {
-                                    var e = "posthog";
-                                    return (
-                                        "posthog" !== a && (e += "." + a),
-                                        t || (e += " (stub)"),
-                                        e
-                                    );
-                                },
-                                u.people.toString = function () {
-                                    return u.toString(1) + ".people (stub)";
-                                },
-                                o =
-                                    "init me ws ys ps bs capture je Di ks register register_once register_for_session unregister unregister_for_session Ps getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Es $s createPersonProfile Is opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Ss debug xs getPageViewId captureTraceFeedback captureTraceMetric".split(
-                                        " ",
-                                    ),
-                                n = 0;
-                            n < o.length;
-                            n++
-                        )
-                            g(u, o[n]);
-                        e._i.push([i, s, a]);
-                    }),
-                    (e.__SV = 1));
-            })(document, window.posthog || []);
-            posthog.init("phc_yJW1VjHGGwmCbbrtczfqqNxgBDbhlhOWcdzcIJEOTFE", {
-                api_host: "https://us.i.posthog.com",
-                person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well
+            // PWA Installation and Service Worker Registration
+            let deferredPrompt;
+            let isInstalled = false;
+            
+            // Check if app is installed
+            if (window.matchMedia('(display-mode: standalone)').matches || 
+                window.navigator.standalone === true) {
+                isInstalled = true;
+                document.body.classList.add('installed-app');
+            }
+            
+            // Hide loading screen when app is ready
+            window.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => {
+                    document.body.classList.add('app-loaded');
+                }, 1000);
             });
+            
+            // Service Worker Registration
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then((registration) => {
+                            console.log('💕 Service Worker registrado exitosamente:', registration.scope);
+                            
+                            // Check for updates
+                            registration.addEventListener('updatefound', () => {
+                                const newWorker = registration.installing;
+                                newWorker.addEventListener('statechange', () => {
+                                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                        // New version available
+                                        showUpdateNotification();
+                                    }
+                                });
+                            });
+                        })
+                        .catch((error) => {
+                            console.log('💔 Service Worker falló:', error);
+                        });
+                });
+            }
+            
+            // PWA Install Prompt
+            window.addEventListener('beforeinstallprompt', (e) => {
+                console.log('💕 Prompt de instalación disponible');
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                if (!isInstalled) {
+                    showInstallButton();
+                }
+            });
+            
+            // Show install button
+            function showInstallButton() {
+                // This will be called from React app when ready
+                window.loveActsInstallPrompt = deferredPrompt;
+            }
+            
+            // Show update notification
+            function showUpdateNotification() {
+                if (window.loveActsShowUpdateNotification) {
+                    window.loveActsShowUpdateNotification();
+                } else {
+                    // Fallback notification
+                    if (confirm('💕 Nueva versión de LoveActs disponible. ¿Actualizar ahora?')) {
+                        window.location.reload();
+                    }
+                }
+            }
+            
+            // Track installation
+            window.addEventListener('appinstalled', (evt) => {
+                console.log('💕 LoveActs instalada exitosamente');
+                isInstalled = true;
+                document.body.classList.add('installed-app');
+                
+                // Analytics event (if available)
+                if (window.gtag) {
+                    gtag('event', 'app_installed', {
+                        method: 'pwa'
+                    });
+                }
+            });
+            
+            // Handle offline/online status
+            window.addEventListener('online', () => {
+                console.log('💕 Conexión restaurada');
+                if (window.loveActsOnlineStatusChanged) {
+                    window.loveActsOnlineStatusChanged(true);
+                }
+            });
+            
+            window.addEventListener('offline', () => {
+                console.log('📵 Sin conexión - modo offline');
+                if (window.loveActsOnlineStatusChanged) {
+                    window.loveActsOnlineStatusChanged(false);
+                }
+            });
+            
+            // Prevent zoom on iOS
+            document.addEventListener('touchstart', function (event) {
+                if (event.touches.length > 1) {
+                    event.preventDefault();
+                }
+            }, { passive: false });
+            
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function (event) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+            
+            console.log('💕 LoveActs PWA inicializada');
         </script>
+        
+        <!-- Remove Emergent badge for PWA version -->
     </body>
 </html>
