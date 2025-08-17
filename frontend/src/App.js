@@ -1883,7 +1883,7 @@ const Dashboard = () => {
                 <div className="mt-3 text-center">
                   <div className="text-4xl mb-1">{newMood.mood_emoji}</div>
                   <div className="text-sm text-gray-600">
-                    {getMoodEmojis().find(mood => mood.level === newMood.mood_level)?.label}
+                    {getMoodEmojis().find(mood => mood.id === newMood.mood_id)?.label}
                   </div>
                 </div>
               </div>
