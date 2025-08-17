@@ -1115,9 +1115,6 @@ const Dashboard = () => {
                         <span className="text-sm font-medium text-blue-700 capitalize">
                           {activity.category}
                         </span>
-                        {activity.time_of_day && (
-                          <span className="text-sm text-gray-500">• {activity.time_of_day}</span>
-                        )}
                       </div>
                       <p className="text-gray-700 font-medium mb-2">{activity.description}</p>
                       {activity.partner_comment && (
