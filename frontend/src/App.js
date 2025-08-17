@@ -440,7 +440,7 @@ const Dashboard = () => {
     time_of_day: ''
   });
   const [newMood, setNewMood] = useState({
-    mood_level: 5,
+    mood_level: 6,
     mood_emoji: '😊',
     note: ''
   });
