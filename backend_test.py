@@ -14,7 +14,7 @@ import os
 import random
 
 # Backend URL from environment
-BACKEND_URL = "https://8209b18f-2b28-4353-b692-57dc859b977b.preview.emergentagent.com/api"
+BACKEND_URL = "https://couples-app-1.preview.emergentagent.com/api"
 
 class LoveActsV2BackendTester:
     def __init__(self):
