@@ -1,5 +1,5 @@
-// LoveActs PWA Service Worker v2.0 - Simplified
-const CACHE_NAME = 'loveacts-v2-cache';
+// LoveActs PWA Service Worker v2.1 - Con Auto-update
+const CACHE_NAME = 'loveacts-v2-1-cache';
 
 // Archivos esenciales
 const ESSENTIAL_FILES = [
@@ -9,7 +9,7 @@ const ESSENTIAL_FILES = [
 
 // Instalar Service Worker
 self.addEventListener('install', (event) => {
-  console.log('💕 LoveActs Service Worker: Instalando...');
+  console.log('💕 LoveActs Service Worker: Instalando v2.1...');
   
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -19,6 +19,7 @@ self.addEventListener('install', (event) => {
       })
       .then(() => {
         console.log('💕 Archivos cacheados');
+        // Activar inmediatamente nueva versión
         return self.skipWaiting();
       })
       .catch((error) => {
@@ -29,8 +30,25 @@ self.addEventListener('install', (event) => {
 
 // Activar Service Worker
 self.addEventListener('activate', (event) => {
-  console.log('💕 Service Worker activado');
-  event.waitUntil(self.clients.claim());
+  console.log('💕 Service Worker activando v2.1');
+  
+  event.waitUntil(
+    // Limpiar caches viejos
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('🗑️ Eliminando cache antiguo:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    }).then(() => {
+      // Tomar control inmediatamente
+      console.log('💕 Nueva versión activada');
+      return self.clients.claim();
+    })
+  );
 });
 
 // Interceptar requests básico
@@ -48,4 +66,11 @@ self.addEventListener('fetch', (event) => {
   }
 });
 
-console.log('💕 LoveActs Service Worker cargado');
+// Notificar a la app sobre actualizaciones
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
+console.log('💕 LoveActs Service Worker v2.1 cargado');
