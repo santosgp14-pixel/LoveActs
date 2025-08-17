@@ -2124,7 +2124,7 @@ const Main = () => {
           <div className="text-6xl mb-4">💕</div>
           <div className="text-xl text-gray-600">Cargando LoveActs...</div>
           <div className="flex items-center justify-center gap-2 mt-2">
-            <div className="text-sm text-pink-600">✨ Versión PWA 2.0</div>
+            <div className="text-sm text-pink-600">✨ Versión PWA 2.2</div>
             {isInstalled && (
               <div className="flex items-center gap-1">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
