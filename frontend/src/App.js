@@ -1856,20 +1856,20 @@ const Dashboard = () => {
                 </label>
                 <div className="relative">
                   <select
-                    value={newMood.mood_level}
+                    value={newMood.mood_id}
                     onChange={(e) => {
-                      const selectedMood = getMoodEmojis().find(mood => mood.level === parseInt(e.target.value));
+                      const selectedMood = getMoodEmojis().find(mood => mood.id === e.target.value);
                       setNewMood({
                         ...newMood,
-                        mood_level: selectedMood.level,
+                        mood_id: selectedMood.id,
                         mood_emoji: selectedMood.emoji
                       });
                     }}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent appearance-none bg-white text-base"
                   >
                     {getMoodEmojis().map((mood) => (
-                      <option key={mood.level} value={mood.level}>
-                        {mood.emoji} {mood.label} (Nivel {mood.level}/10)
+                      <option key={mood.id} value={mood.id}>
+                        {mood.emoji} {mood.label}
                       </option>
                     ))}
                   </select>
