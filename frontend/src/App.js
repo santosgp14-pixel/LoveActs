@@ -968,7 +968,7 @@ const Dashboard = () => {
                     <div className="flex items-center gap-2 mb-1">
                       <span>{getCategoryIcon(activity.category)}</span>
                       <span className="text-sm font-medium text-pink-700">
-                        {activity.category}
+                        {getCategoryName(activity.category)}
                       </span>
                     </div>
                     <p className="text-gray-700 text-sm">{activity.description}</p>
