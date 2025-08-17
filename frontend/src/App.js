@@ -781,11 +781,16 @@ const Dashboard = () => {
   };
 
   const getMoodEmojis = () => [
-    { level: 1, emoji: '😢', label: 'Muy mal' },
-    { level: 2, emoji: '😔', label: 'Mal' },
-    { level: 3, emoji: '😐', label: 'Neutral' },
-    { level: 4, emoji: '😊', label: 'Bien' },
-    { level: 5, emoji: '🥰', label: 'Excelente' }
+    { level: 1, emoji: '😭', label: 'Devastado/a' },
+    { level: 2, emoji: '😢', label: 'Muy triste' },
+    { level: 3, emoji: '😔', label: 'Triste' },
+    { level: 4, emoji: '😐', label: 'Neutral' },
+    { level: 5, emoji: '🙂', label: 'Tranquilo/a' },
+    { level: 6, emoji: '😊', label: 'Contento/a' },
+    { level: 7, emoji: '😄', label: 'Alegre' },
+    { level: 8, emoji: '😍', label: 'Enamorado/a' },
+    { level: 9, emoji: '🥰', label: 'Radiante' },
+    { level: 10, emoji: '🤩', label: 'Eufórico/a' }
   ];
 
   // Vista Home Expandida - MODIFICADA según requisitos
