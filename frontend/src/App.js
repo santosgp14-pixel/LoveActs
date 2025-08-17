@@ -296,6 +296,7 @@ const AuthForm = () => {
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-white to-blue-100 flex items-center justify-center p-4">
       <PWAInstallButton />
       <OfflineIndicator />
+      <UpdateAvailableNotification />
       
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 border border-pink-100">
         <div className="text-center mb-8">
