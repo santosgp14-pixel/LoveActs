@@ -556,6 +556,23 @@ const Dashboard = () => {
     }
   };
 
+  const fetchTotalStats = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/stats/total`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setTotalStats(data);
+      }
+    } catch (error) {
+      console.error('Error fetching total stats:', error);
+    }
+  };
+
   const handleAddActivity = async (e) => {
     e.preventDefault();
     setLoading(true);
