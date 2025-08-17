@@ -733,6 +733,7 @@ class LoveActsV2BackendTester:
         except Exception as e:
             self.log_result("Test User Login", False, f"Request error: {str(e)}")
             return False
+    def run_all_tests(self):
         """Run all backend tests for LoveActs V2.0"""
         print("=" * 70)
         print("🚀 STARTING LOVEACTS V2.0 BACKEND TESTING SUITE")
@@ -740,14 +741,15 @@ class LoveActsV2BackendTester:
         print(f"Testing backend at: {BACKEND_URL}")
         print()
         
-        # Test sequence for V2.0
+        # Test sequence for V2.0 with focus on mood system updates
         tests = [
             ("Health Check V2.0", self.test_health_check),
+            ("Test User Mood System", self.test_with_existing_user),
             ("User Registration", self.test_user_registration),
             ("Partner Linking", self.test_partner_linking),
             ("Create Activities V2", self.test_create_activities_v2),
             ("Rating System", self.test_rating_system),
-            ("Mood System", self.test_mood_system),
+            ("Mood System (New mood_id)", self.test_mood_system),
             ("Special Memories", self.test_special_memories),
             ("Gamification System", self.test_gamification_system),
             ("Expanded Daily Activities", self.test_expanded_daily_activities),
