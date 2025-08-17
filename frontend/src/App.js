@@ -788,38 +788,63 @@ const Dashboard = () => {
     { level: 5, emoji: '🥰', label: 'Excelente' }
   ];
 
-  // Vista Home Expandida
+  // Vista Home Expandida - MODIFICADA según requisitos
   const renderHomeView = () => (
     <div className="space-y-6">
-      {/* Header con fecha y estado de ánimo */}
+      {/* Header con fecha actual y estado de ánimo - NUEVO DISEÑO */}
       <div className="bg-white rounded-xl shadow-lg p-6 border border-pink-100">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2 sm:mb-0">
-            💕 {new Date(selectedDate).toLocaleDateString('es-ES', { 
+        {/* Fecha actual prominente */}
+        <div className="text-center mb-6">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            📅 {new Date().toLocaleDateString('es-ES', { 
               weekday: 'long', 
               year: 'numeric', 
               month: 'long', 
               day: 'numeric' 
             })}
           </h2>
-          <div className="flex gap-2">
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500"
-            />
-            <button
-              onClick={() => setShowMoodModal(true)}
-              className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition duration-200"
-            >
-              {userMood ? userMood.mood_emoji : '😊'} Estado
-            </button>
-          </div>
+          <p className="text-gray-600 text-sm">¡Un nuevo día para demostrar amor!</p>
         </div>
 
+        {/* Selector de estado de ánimo - Justo debajo de la fecha */}
+        <div className="flex justify-center mb-6">
+          <button
+            onClick={() => setShowMoodModal(true)}
+            className="bg-purple-500 text-white px-6 py-3 rounded-lg hover:bg-purple-600 transition duration-200 flex items-center gap-2"
+          >
+            <span className="text-xl">{userMood ? userMood.mood_emoji : '😊'}</span>
+            <span>Mi Estado de Ánimo</span>
+          </button>
+        </div>
+
+        {/* Total Acciones - NUEVO */}
+        {totalStats && (
+          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg p-4 mb-6 border border-yellow-200">
+            <div className="text-center">
+              <h3 className="text-lg font-bold text-yellow-800 mb-2">💫 Total Acciones Históricas</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                <div>
+                  <div className="text-2xl font-bold text-yellow-600">{totalStats.total_user_activities}</div>
+                  <div className="text-sm text-yellow-700">Tus acciones</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-orange-600">{totalStats.total_partner_activities}</div>
+                  <div className="text-sm text-orange-700">Acciones de pareja</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-red-600">{totalStats.total_activities_together}</div>
+                  <div className="text-sm text-red-700">Total juntos</div>
+                </div>
+              </div>
+              <div className="mt-3 text-sm text-gray-600">
+                💕 {totalStats.relationship_days} días registrando amor
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Estados de ánimo del día */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4 text-center">
             <h3 className="text-lg font-semibold text-purple-800">Tu Estado</h3>
             {userMood ? (
@@ -828,7 +853,7 @@ const Dashboard = () => {
                 <div className="text-sm text-purple-700">{userMood.note || 'Sin nota'}</div>
               </>
             ) : (
-              <div className="text-gray-500 text-sm">No registrado</div>
+              <div className="text-gray-500 text-sm">No registrado hoy</div>
             )}
           </div>
           <div className="bg-gradient-to-r from-indigo-50 to-indigo-100 rounded-lg p-4 text-center">
@@ -840,25 +865,9 @@ const Dashboard = () => {
               </>
             ) : (
               <div className="text-gray-500 text-sm">
-                {user?.partner_id ? 'No registrado' : 'Sin pareja'}
+                {user?.partner_id ? 'No registrado hoy' : 'Sin pareja'}
               </div>
             )}
-          </div>
-        </div>
-
-        {/* Puntuaciones del día */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-gradient-to-r from-pink-50 to-pink-100 rounded-lg p-4 text-center">
-            <h3 className="text-lg font-semibold text-pink-800">Actos Completados</h3>
-            <div className="text-3xl font-bold text-pink-600">{completedScore}</div>
-            <div className="text-sm text-pink-700">Puntuación total</div>
-          </div>
-          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 text-center">
-            <h3 className="text-lg font-semibold text-blue-800">Actividades</h3>
-            <div className="text-3xl font-bold text-blue-600">
-              {activities.length + partnerActivities.length}
-            </div>
-            <div className="text-sm text-blue-700">Total del día</div>
           </div>
         </div>
       </div>
@@ -866,7 +875,7 @@ const Dashboard = () => {
       {/* Accesos rápidos */}
       <div className="bg-white rounded-xl shadow-lg p-6 border border-pink-100">
         <h3 className="text-xl font-bold text-gray-800 mb-4">🚀 Accesos Rápidos</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           <button
             onClick={() => setCurrentView('add')}
             className="bg-green-500 text-white p-4 rounded-lg hover:bg-green-600 transition duration-200 text-center"
@@ -894,6 +903,14 @@ const Dashboard = () => {
           </button>
           
           <button
+            onClick={() => setCurrentView('history')}
+            className="bg-blue-500 text-white p-4 rounded-lg hover:bg-blue-600 transition duration-200 text-center"
+          >
+            <div className="text-2xl mb-1">📚</div>
+            <div className="text-sm font-medium">Historial</div>
+          </button>
+          
+          <button
             onClick={() => setCurrentView('compare')}
             className="bg-orange-500 text-white p-4 rounded-lg hover:bg-orange-600 transition duration-200 text-center"
           >
@@ -903,11 +920,11 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Resumen rápido de actividades */}
+      {/* Resumen rápido de actividades de HOY */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Tus actividades */}
         <div className="bg-white rounded-xl shadow-lg p-6 border border-pink-100">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">🌟 Tus Actos Recientes</h3>
+          <h3 className="text-xl font-bold text-gray-800 mb-4">🌟 Tus Actos de Hoy</h3>
           {activities.slice(0, 3).map((activity) => (
             <div key={activity.id} className="bg-pink-50 rounded-lg p-3 mb-3 border-l-4 border-pink-400">
               <div className="flex justify-between items-start">
@@ -926,16 +943,17 @@ const Dashboard = () => {
               </div>
             </div>
           ))}
-          {activities.length > 3 && (
-            <div className="text-center text-sm text-gray-500">
-              +{activities.length - 3} actividades más
+          {activities.length === 0 && (
+            <div className="text-center py-4 text-gray-500">
+              <div className="text-2xl mb-2">💝</div>
+              <p className="text-sm">Aún no has registrado actos hoy</p>
             </div>
           )}
         </div>
 
         {/* Actividades de pareja */}
         <div className="bg-white rounded-xl shadow-lg p-6 border border-blue-100">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">💙 Actos de tu Pareja</h3>
+          <h3 className="text-xl font-bold text-gray-800 mb-4">💙 Actos de tu Pareja Hoy</h3>
           {partnerActivities.slice(0, 3).map((activity) => (
             <div key={activity.id} className="bg-blue-50 rounded-lg p-3 mb-3 border-l-4 border-blue-400">
               <div className="flex justify-between items-start">
@@ -954,9 +972,10 @@ const Dashboard = () => {
               </div>
             </div>
           ))}
-          {partnerActivities.length > 3 && (
-            <div className="text-center text-sm text-gray-500">
-              +{partnerActivities.length - 3} actividades más
+          {partnerActivities.length === 0 && (
+            <div className="text-center py-4 text-gray-500">
+              <div className="text-2xl mb-2">💙</div>
+              <p className="text-sm">{user?.partner_id ? 'Tu pareja aún no ha registrado actos hoy' : 'Sin pareja vinculada'}</p>
             </div>
           )}
         </div>
