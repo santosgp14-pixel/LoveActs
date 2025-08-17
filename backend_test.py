@@ -144,39 +144,53 @@ class LoveActsV2BackendTester:
             return False
     
     def test_create_activities_v2(self):
-        """Test creating activities with V2.0 structure (no rating initially)"""
+        """Test creating activities with V2.0 structure (no rating initially) and various categories"""
         if not self.user1_token or not self.user2_token:
             self.log_result("Create Activities V2", False, "Missing user tokens")
             return False
         
-        # User 1 creates activities (no rating - will be rated by partner)
+        # User 1 creates activities with various categories (no rating - will be rated by partner)
         activities_user1 = [
             {
                 "description": "Le preparé el desayuno favorito en la cama con flores",
-                "category": "practical",
-                "time_of_day": "morning"
+                "category": "practical"
+                # Note: time_of_day removed as per requirements
             },
             {
                 "description": "Le di un abrazo largo y cálido cuando llegó del trabajo",
-                "category": "physical", 
-                "time_of_day": "evening"
+                "category": "physical"
             },
             {
                 "description": "Le escribí una carta de amor expresando mis sentimientos",
-                "category": "emotional",
-                "time_of_day": "afternoon"
+                "category": "emotional"
+            },
+            {
+                "description": "Acto general sin categoría específica",
+                "category": "general"
+            },
+            {
+                "description": "Acto sin especificar categoría"
+                # No category field - should use default
             }
         ]
         
         headers1 = {"Authorization": f"Bearer {self.user1_token}"}
         
-        for activity in activities_user1:
+        for i, activity in enumerate(activities_user1):
             try:
                 response = self.session.post(f"{BACKEND_URL}/activities", json=activity, headers=headers1)
                 if response.status_code == 200:
                     data = response.json()
                     if "activity" in data and data["activity"]["is_pending_rating"] == True:
                         self.created_activities.append(data["activity"]["id"])
+                        # Verify category handling
+                        expected_category = activity.get("category", "general")
+                        actual_category = data["activity"]["category"]
+                        if actual_category == expected_category:
+                            self.log_result(f"Create Activity {i+1} (Category: {expected_category})", True, f"Activity created with correct category: {actual_category}")
+                        else:
+                            self.log_result(f"Create Activity {i+1} (Category: {expected_category})", False, f"Expected category {expected_category}, got {actual_category}")
+                            return False
                     else:
                         self.log_result("Create Activities V2 (User 1)", False, "Activity not marked as pending rating", data)
                         return False
@@ -187,29 +201,37 @@ class LoveActsV2BackendTester:
                 self.log_result("Create Activities V2 (User 1)", False, f"Request error: {str(e)}")
                 return False
         
-        # User 2 creates activities
+        # User 2 creates activities with different categories
         activities_user2 = [
             {
                 "description": "Organicé una cita sorpresa en nuestro lugar favorito",
-                "category": "emotional",
-                "time_of_day": "evening"
+                "category": "emotional"
             },
             {
                 "description": "Hicimos ejercicio juntos en el parque",
-                "category": "physical",
-                "time_of_day": "morning"
+                "category": "physical"
+            },
+            {
+                "description": "Limpié toda la casa como sorpresa",
+                "category": "practical"
             }
         ]
         
         headers2 = {"Authorization": f"Bearer {self.user2_token}"}
         
-        for activity in activities_user2:
+        for i, activity in enumerate(activities_user2):
             try:
                 response = self.session.post(f"{BACKEND_URL}/activities", json=activity, headers=headers2)
                 if response.status_code == 200:
                     data = response.json()
                     if "activity" in data and data["activity"]["is_pending_rating"] == True:
                         self.created_activities.append(data["activity"]["id"])
+                        # Verify category
+                        if data["activity"]["category"] == activity["category"]:
+                            self.log_result(f"Create Activity User2-{i+1} (Category: {activity['category']})", True, f"Activity created with correct category")
+                        else:
+                            self.log_result(f"Create Activity User2-{i+1}", False, f"Category mismatch: expected {activity['category']}, got {data['activity']['category']}")
+                            return False
                     else:
                         self.log_result("Create Activities V2 (User 2)", False, "Activity not marked as pending rating", data)
                         return False
@@ -220,7 +242,7 @@ class LoveActsV2BackendTester:
                 self.log_result("Create Activities V2 (User 2)", False, f"Request error: {str(e)}")
                 return False
         
-        self.log_result("Create Activities V2", True, f"Successfully created {len(self.created_activities)} activities, all pending rating")
+        self.log_result("Create Activities V2", True, f"Successfully created {len(self.created_activities)} activities with various categories, all pending rating")
         return True
     
     def test_rating_system(self):
