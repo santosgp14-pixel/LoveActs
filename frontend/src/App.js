@@ -147,6 +147,30 @@ const OfflineIndicator = () => {
   );
 };
 
+// Componente Update Available
+const UpdateAvailableNotification = () => {
+  const { updateAvailable, updateApp } = usePWA();
+
+  if (!updateAvailable) return null;
+
+  return (
+    <div className="fixed bottom-20 left-4 right-4 bg-gradient-to-r from-green-500 to-blue-500 text-white p-4 rounded-lg shadow-lg z-50">
+      <div className="flex items-center justify-between">
+        <div className="flex-1">
+          <h4 className="font-semibold text-sm">¡Actualización Disponible!</h4>
+          <p className="text-xs opacity-90">Nueva versión de LoveActs lista</p>
+        </div>
+        <button
+          onClick={updateApp}
+          className="bg-white text-green-600 px-4 py-2 rounded font-medium text-sm hover:bg-gray-100 transition-colors ml-4"
+        >
+          Actualizar
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
