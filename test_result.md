@@ -134,6 +134,9 @@
         - working: true
           agent: "testing"
           comment: "✅ API COMPLETAMENTE FUNCIONAL: Probado POST /api/mood con mood_level 1-5, emoji, nota opcional. GET /api/mood/weekly/{start_date} retorna 7 días. Validación niveles 1-5, actualización mood existente mismo día, integración con daily activities. Un mood por día por usuario funcionando."
+        - working: true
+          agent: "testing"
+          comment: "✅ MOOD SYSTEM UPDATED TO mood_id SYSTEM: Ejecuté tests completos con nuevo sistema mood_id (string) en lugar de mood_level (integer). RESULTADOS: 100% éxito. ✅ POST /api/mood funciona con mood_id: 'happy', 'horny', 'bored', 'sleepy', 'excited', 'romantic' ✅ Validación correcta: rechaza mood_id vacío y faltante ✅ Actualización de mood existente funciona ✅ GET /api/mood/weekly retorna moods con campo mood_id ✅ Probado con credenciales test@example.com/password123 ✅ Categorías de actividades funcionan sin selección por defecto. Sistema completamente migrado a mood_id."
 
   - task: "Sistema de Recuerdos Especiales"
     implemented: true
