@@ -768,10 +768,11 @@ const Dashboard = () => {
 
   const getCategoryIcon = (category) => {
     const icons = {
-      physical: '🤗',
-      emotional: '💝',
-      practical: '🏠',
-      general: '❤️'
+      'palabras-afirmacion': '💬',
+      'tiempo-calidad': '⏰',
+      'regalos': '🎁',
+      'actos-servicio': '🤝',
+      'contacto-fisico': '🤗'
     };
     return icons[category] || '❤️';
   };
