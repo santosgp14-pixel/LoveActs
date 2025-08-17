@@ -434,6 +434,17 @@ async def create_activity(activity: ActivityCreate, current_user = Depends(get_c
     
     db.activities.insert_one(new_activity)
     
+    # NUEVA: Enviar notificación a la pareja
+    if current_user.get("partner_id"):
+        partner_name = current_user.get("partner_custom_name") or current_user["name"]
+        notification = NotificationMessage(
+            title=f"💕 Nuevo acto de amor",
+            body=f"{partner_name} registró un acto especial para ti. ¡Ve a calificarlo!",
+            tag="new_activity",
+            data={"activity_id": activity_id, "type": "new_activity"}
+        )
+        await notify_partner(current_user, notification)
+    
     return {
         "message": "Actividad registrada exitosamente. Tu pareja podrá calificarla.",
         "activity": ActivityResponse(**new_activity)
