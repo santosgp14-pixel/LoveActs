@@ -559,8 +559,8 @@ async def get_pending_ratings(current_user = Depends(get_current_user)):
 # Endpoints para Estado de Ánimo
 @app.post("/api/mood")
 async def create_mood(mood_data: MoodCreate, current_user = Depends(get_current_user)):
-    if not (1 <= mood_data.mood_level <= 5):
-        raise HTTPException(status_code=400, detail="El nivel de ánimo debe estar entre 1 y 5")
+    if not (1 <= mood_data.mood_level <= 10):  # Cambiado a 10
+        raise HTTPException(status_code=400, detail="El nivel de ánimo debe estar entre 1 y 10")
     
     today = datetime.now(timezone.utc).date().isoformat()
     
