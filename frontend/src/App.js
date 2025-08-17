@@ -904,9 +904,6 @@ const Dashboard = () => {
             {partnerMood ? (
               <>
                 <div className="text-3xl">{partnerMood.mood_emoji}</div>
-                <div className="text-sm text-indigo-700">
-                  Nivel: {partnerMood.mood_level}/10
-                </div>
                 {partnerMood.note && (
                   <div className="text-sm text-indigo-700 mt-1">"{partnerMood.note}"</div>
                 )}
