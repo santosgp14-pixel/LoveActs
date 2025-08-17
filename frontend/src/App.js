@@ -891,9 +891,6 @@ const Dashboard = () => {
             {userMood ? (
               <>
                 <div className="text-3xl">{userMood.mood_emoji}</div>
-                <div className="text-sm text-purple-700">
-                  Nivel: {userMood.mood_level}/10
-                </div>
                 {userMood.note && (
                   <div className="text-sm text-purple-700 mt-1">"{userMood.note}"</div>
                 )}
