@@ -592,7 +592,7 @@ const Dashboard = () => {
       if (response.ok) {
         setNewActivity({
           description: '',
-          category: 'general'
+          category: 'words_of_affirmation'
         });
         setSuccess('¡Actividad registrada! Tu pareja podrá calificarla.');
         fetchDailyData();
