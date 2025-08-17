@@ -436,7 +436,7 @@ const Dashboard = () => {
   });
   const [newActivity, setNewActivity] = useState({
     description: '',
-    category: 'general'
+    category: 'words_of_affirmation'
   });
   const [newMood, setNewMood] = useState({
     mood_level: 6,
