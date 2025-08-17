@@ -88,6 +88,17 @@ class ActivityRating(BaseModel):
     rating: int  # 1-5 estrellas
     comment: Optional[str] = None
 
+# Nuevos modelos para personalización de pareja
+class UpdatePartnerInfo(BaseModel):
+    custom_name: Optional[str] = None
+    photo: Optional[str] = None  # base64 encoded image
+
+class TotalStatsResponse(BaseModel):
+    total_user_activities: int
+    total_partner_activities: int
+    total_activities_together: int
+    relationship_days: int
+
 # Modelos para Estado de Ánimo
 class MoodCreate(BaseModel):
     mood_level: int  # 1-5 (1=muy mal, 5=excelente)
