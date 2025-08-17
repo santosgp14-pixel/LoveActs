@@ -439,7 +439,7 @@ const Dashboard = () => {
     category: 'words_of_affirmation'
   });
   const [newMood, setNewMood] = useState({
-    mood_level: 6,
+    mood_id: 'happy',
     mood_emoji: '😊',
     note: ''
   });
