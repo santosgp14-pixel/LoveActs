@@ -559,8 +559,9 @@ async def get_pending_ratings(current_user = Depends(get_current_user)):
 # Endpoints para Estado de Ánimo
 @app.post("/api/mood")
 async def create_mood(mood_data: MoodCreate, current_user = Depends(get_current_user)):
-    if not (1 <= mood_data.mood_level <= 10):  # Cambiado a 10
-        raise HTTPException(status_code=400, detail="El nivel de ánimo debe estar entre 1 y 10")
+    # Validar que el mood_id no esté vacío
+    if not mood_data.mood_id:
+        raise HTTPException(status_code=400, detail="El ID del estado de ánimo es requerido")
     
     today = datetime.now(timezone.utc).date().isoformat()
     
@@ -571,7 +572,7 @@ async def create_mood(mood_data: MoodCreate, current_user = Depends(get_current_
     mood_doc = {
         "id": mood_id,
         "user_id": current_user["id"],
-        "mood_level": mood_data.mood_level,
+        "mood_id": mood_data.mood_id,
         "mood_emoji": mood_data.mood_emoji,
         "note": mood_data.note,
         "date": today,
@@ -579,38 +580,29 @@ async def create_mood(mood_data: MoodCreate, current_user = Depends(get_current_
     }
     
     if existing_mood:
-        # Actualizar estado de ánimo existente
+        # Actualizar el estado existente
         db.moods.update_one(
             {"user_id": current_user["id"], "date": today},
-            {"$set": mood_doc}
+            {"$set": {
+                "mood_id": mood_data.mood_id,
+                "mood_emoji": mood_data.mood_emoji,
+                "note": mood_data.note,
+                "created_at": datetime.now(timezone.utc)
+            }}
         )
-        message = "Estado de ánimo actualizado exitosamente"
+        mood_doc["id"] = existing_mood["id"]
     else:
-        # Crear nuevo estado de ánimo
+        # Crear nuevo estado
         db.moods.insert_one(mood_doc)
-        message = "Estado de ánimo registrado exitosamente"
     
-    # NUEVA: Enviar notificación a la pareja
+    # Enviar notificación a la pareja si está vinculada
     if current_user.get("partner_id"):
-        partner_name = current_user.get("partner_custom_name") or current_user["name"]
-        mood_text = {
-            1: "devastado/a 😭", 2: "muy triste 😢", 3: "triste 😔", 
-            4: "neutral 😐", 5: "tranquilo/a 🙂", 6: "contento/a 😊",
-            7: "alegre 😄", 8: "enamorado/a 😍", 9: "radiante 🥰", 10: "eufórico/a 🤩"
-        }.get(mood_data.mood_level, "diferente")
-        
-        notification = NotificationMessage(
-            title=f"{mood_data.mood_emoji} Cambió su estado de ánimo",
-            body=f"{partner_name} se siente {mood_text} hoy. ¡Tal vez necesite un abrazo!",
-            tag="mood_change",
-            data={"mood_level": mood_data.mood_level, "type": "mood_change"}
-        )
-        await notify_partner(current_user, notification)
+        partner = db.users.find_one({"id": current_user["partner_id"]})
+        if partner:
+            # Aquí se podría enviar una notificación push
+            print(f"💕 {current_user['name']} actualizó su estado de ánimo a {mood_data.mood_emoji}")
     
-    return {
-        "message": message,
-        "mood": MoodResponse(**mood_doc)
-    }
+    return MoodResponse(**mood_doc)
 
 @app.get("/api/mood/weekly/{start_date}")
 async def get_weekly_moods(start_date: str, current_user = Depends(get_current_user)):
