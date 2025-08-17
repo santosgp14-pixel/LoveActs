@@ -56,6 +56,8 @@ class UserResponse(BaseModel):
     partner_id: Optional[str] = None
     partner_code: Optional[str] = None
     partner_name: Optional[str] = None
+    partner_custom_name: Optional[str] = None  # Nuevo: apodo personalizado
+    partner_photo: Optional[str] = None  # Nuevo: foto de pareja (base64)
     created_at: datetime
 
 class LinkPartnerRequest(BaseModel):
