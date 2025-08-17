@@ -766,11 +766,21 @@ const Dashboard = () => {
 
   const getCategoryIcon = (category) => {
     const icons = {
+      'words_of_affirmation': '💬',
+      'quality_time': '⏰',
+      'gifts': '🎁',
+      'acts_of_service': '🤝',
+      'physical_touch': '🤗',
+      // Mantenemos las categorías anteriores para compatibilidad
       'palabras-afirmacion': '💬',
       'tiempo-calidad': '⏰',
       'regalos': '🎁',
       'actos-servicio': '🤝',
-      'contacto-fisico': '🤗'
+      'contacto-fisico': '🤗',
+      'general': '❤️',
+      'physical': '🤗',
+      'emotional': '💝',
+      'practical': '🏠'
     };
     return icons[category] || '❤️';
   };
