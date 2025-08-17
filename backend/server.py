@@ -797,6 +797,73 @@ async def get_mood_activity_correlation(current_user = Depends(get_current_user)
         "message": f"Datos de correlación de los últimos 30 días ({len(correlation_data)} días con datos)"
     }
 
+# Nuevos endpoints para notificaciones
+@app.post("/api/notifications/subscribe")
+async def subscribe_to_notifications(subscription: NotificationSubscription, current_user = Depends(get_current_user)):
+    """Suscribir usuario a notificaciones push"""
+    
+    # Verificar si ya existe la suscripción
+    existing = db.notification_subscriptions.find_one({
+        "user_id": current_user["id"],
+        "endpoint": subscription.endpoint
+    })
+    
+    if existing:
+        return {"message": "Ya estás suscrito a notificaciones", "status": "existing"}
+    
+    # Crear nueva suscripción
+    subscription_doc = {
+        "id": str(uuid.uuid4()),
+        "user_id": current_user["id"],
+        "endpoint": subscription.endpoint,
+        "keys": subscription.keys,
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    db.notification_subscriptions.insert_one(subscription_doc)
+    
+    return {
+        "message": "¡Suscrito a notificaciones exitosamente!",
+        "status": "subscribed"
+    }
+
+@app.get("/api/notifications")
+async def get_user_notifications(current_user = Depends(get_current_user)):
+    """Obtiene las notificaciones del usuario"""
+    
+    notifications = list(db.notifications.find({
+        "user_id": current_user["id"]
+    }).sort("created_at", -1).limit(20))
+    
+    # Convertir ObjectId a string y formatear
+    for notification in notifications:
+        notification["_id"] = str(notification.get("_id", ""))
+    
+    return {
+        "notifications": notifications,
+        "unread_count": db.notifications.count_documents({
+            "user_id": current_user["id"],
+            "read": False
+        })
+    }
+
+@app.put("/api/notifications/{notification_id}/read")
+async def mark_notification_as_read(notification_id: str, current_user = Depends(get_current_user)):
+    """Marca una notificación como leída"""
+    
+    result = db.notifications.update_one(
+        {
+            "id": notification_id,
+            "user_id": current_user["id"]
+        },
+        {"$set": {"read": True}}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Notificación no encontrada")
+    
+    return {"message": "Notificación marcada como leída"}
+
 # Endpoints de gamificación expandida
 @app.get("/api/achievements")
 async def get_user_achievements(current_user = Depends(get_current_user)):
