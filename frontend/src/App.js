@@ -1273,6 +1273,9 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-white to-blue-100">
+      <PWAInstallButton />
+      <OfflineIndicator />
+      
       {/* Header */}
       <header className="bg-white shadow-lg border-b border-pink-100 sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4">
@@ -1281,7 +1284,15 @@ const Dashboard = () => {
               <span className="text-3xl">💕</span>
               <div>
                 <h1 className="text-2xl font-bold text-gray-800">LoveActs</h1>
-                <p className="text-xs text-pink-600">✨ Versión Expandida 2.0</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-xs text-pink-600">✨ Versión PWA 2.0</p>
+                  {isInstalled && (
+                    <div className="flex items-center gap-1">
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                      <span className="text-xs text-green-600">Instalada</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             <div className="text-sm text-gray-600">
