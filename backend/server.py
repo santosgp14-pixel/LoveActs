@@ -93,6 +93,19 @@ class UpdatePartnerInfo(BaseModel):
     custom_name: Optional[str] = None
     photo: Optional[str] = None  # base64 encoded image
 
+# Nuevos modelos para notificaciones push
+class NotificationSubscription(BaseModel):
+    endpoint: str
+    keys: dict  # p256dh y auth keys
+
+class NotificationMessage(BaseModel):
+    title: str
+    body: str
+    icon: Optional[str] = "/images/icon-192x192.png"
+    badge: Optional[str] = "/images/icon-72x72.png"
+    tag: Optional[str] = None
+    data: Optional[dict] = None
+
 class TotalStatsResponse(BaseModel):
     total_user_activities: int
     total_partner_activities: int
