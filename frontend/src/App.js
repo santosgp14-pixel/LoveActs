@@ -1657,6 +1657,7 @@ const Dashboard = () => {
         {currentView === 'add' && renderAddActivityView()}
         {currentView === 'partner' && renderPartnerView()}
         {currentView === 'memories' && renderMemoriesView()}
+        {currentView === 'history' && renderHistoryView()}
         {currentView === 'compare' && renderCompareView()}
         {currentView === 'profile' && renderProfileView()}
       </main>
