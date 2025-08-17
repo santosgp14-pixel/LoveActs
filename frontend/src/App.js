@@ -1488,7 +1488,9 @@ const Dashboard = () => {
             value={newActivity.category}
             onChange={(e) => setNewActivity({...newActivity, category: e.target.value})}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+            required
           >
+            <option value="">Selecciona una categoría...</option>
             <option value="words_of_affirmation">💬 Palabras de afirmación</option>
             <option value="quality_time">⏰ Tiempo de calidad</option>
             <option value="gifts">🎁 Regalos</option>
