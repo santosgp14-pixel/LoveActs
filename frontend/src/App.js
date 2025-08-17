@@ -983,8 +983,147 @@ const Dashboard = () => {
     </div>
   );
 
-  // Nueva Vista: Mi Pareja
-  const renderPartnerView = () => {
+  // Nueva Vista: Historial - NUEVA SECCIÓN
+  const renderHistoryView = () => (
+    <div className="space-y-6">
+      <div className="bg-white rounded-xl shadow-lg p-6 border border-blue-100">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 sm:mb-0 flex items-center gap-2">
+            <span>📚</span> Historial de Actividades
+          </h2>
+          <div className="flex gap-2">
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+
+        {/* Puntuaciones del día seleccionado */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div className="bg-gradient-to-r from-pink-50 to-pink-100 rounded-lg p-4 text-center">
+            <h3 className="text-lg font-semibold text-pink-800">Actos Completados</h3>
+            <div className="text-3xl font-bold text-pink-600">{completedScore}</div>
+            <div className="text-sm text-pink-700">Puntuación del día</div>
+          </div>
+          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 text-center">
+            <h3 className="text-lg font-semibold text-blue-800">Actividades</h3>
+            <div className="text-3xl font-bold text-blue-600">
+              {activities.length + partnerActivities.length}
+            </div>
+            <div className="text-sm text-blue-700">Total del día</div>
+          </div>
+        </div>
+
+        {/* Fecha seleccionada */}
+        <div className="text-center mb-6">
+          <h3 className="text-lg font-semibold text-gray-700">
+            📅 {new Date(selectedDate).toLocaleDateString('es-ES', { 
+              weekday: 'long', 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            })}
+          </h3>
+        </div>
+      </div>
+
+      {/* Actividades detalladas del día */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Tus actividades del día */}
+        <div className="bg-white rounded-xl shadow-lg p-6 border border-pink-100">
+          <h3 className="text-xl font-bold text-gray-800 mb-4">🌟 Tus Actos</h3>
+          {activities.length > 0 ? (
+            <div className="space-y-3">
+              {activities.map((activity) => (
+                <div key={activity.id} className="bg-pink-50 rounded-lg p-4 border-l-4 border-pink-400">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-lg">{getCategoryIcon(activity.category)}</span>
+                        <span className="text-sm font-medium text-pink-700 capitalize">
+                          {activity.category}
+                        </span>
+                        {activity.time_of_day && (
+                          <span className="text-sm text-gray-500">• {activity.time_of_day}</span>
+                        )}
+                      </div>
+                      <p className="text-gray-700 font-medium mb-2">{activity.description}</p>
+                      {activity.partner_comment && (
+                        <div className="bg-white rounded p-2 text-sm text-gray-600">
+                          💭 Comentario: "{activity.partner_comment}"
+                        </div>
+                      )}
+                    </div>
+                    <div className="ml-4 text-right">
+                      <div className="text-sm">{getStarRating(activity.rating)}</div>
+                      {activity.rated_at && (
+                        <div className="text-xs text-gray-500">
+                          Calificado
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <div className="text-4xl mb-2">💝</div>
+              <p>No registraste actos este día</p>
+            </div>
+          )}
+        </div>
+
+        {/* Actividades de la pareja del día */}
+        <div className="bg-white rounded-xl shadow-lg p-6 border border-blue-100">
+          <h3 className="text-xl font-bold text-gray-800 mb-4">💙 Actos de tu Pareja</h3>
+          {partnerActivities.length > 0 ? (
+            <div className="space-y-3">
+              {partnerActivities.map((activity) => (
+                <div key={activity.id} className="bg-blue-50 rounded-lg p-4 border-l-4 border-blue-400">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-lg">{getCategoryIcon(activity.category)}</span>
+                        <span className="text-sm font-medium text-blue-700 capitalize">
+                          {activity.category}
+                        </span>
+                        {activity.time_of_day && (
+                          <span className="text-sm text-gray-500">• {activity.time_of_day}</span>
+                        )}
+                      </div>
+                      <p className="text-gray-700 font-medium mb-2">{activity.description}</p>
+                      {activity.partner_comment && (
+                        <div className="bg-white rounded p-2 text-sm text-gray-600">
+                          💭 Tu comentario: "{activity.partner_comment}"
+                        </div>
+                      )}
+                    </div>
+                    <div className="ml-4 text-right">
+                      <div className="text-sm">{getStarRating(activity.rating)}</div>
+                      {activity.rated_at && (
+                        <div className="text-xs text-gray-500">
+                          Calificado por ti
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <div className="text-4xl mb-2">💙</div>
+              <p>{user?.partner_id ? 'Tu pareja no registró actos este día' : 'Sin pareja vinculada'}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
     if (!user?.partner_id) {
       return (
         <div className="bg-white rounded-xl shadow-lg p-8 border border-pink-100 text-center">
