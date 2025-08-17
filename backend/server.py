@@ -11,6 +11,8 @@ import bcrypt
 import uuid
 import random
 from dotenv import load_dotenv
+import json
+import requests  # Para enviar notificaciones push
 
 # Cargar variables de entorno
 load_dotenv()
