@@ -271,8 +271,46 @@
   test_all: true
   test_priority: "high_first"
 
+  - task: "UI refinements - Home screen adjustments"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "User reported mood states text overflow issue - words overspilling from containers. Need to implement: move version text to bottom, reduce date font size, hide Comparar link, show broken heart when no acts, convert mood states to dropdown"
+
+  - task: "Remove Momento del día dropdown from Añadir section"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Need to remove time_of_day field from new activity form"
+
+  - task: "Update app icon color for better contrast"
+    implemented: false
+    working: false
+    file: "/app/frontend/public/manifest.json"
+    stuck_count: 0
+    priority: "low"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Need to change app icon color to provide better contrast with heart elements"
+
 ## agent_communication:
     - agent: "main"
       message: "Expandida aplicación LoveActs completamente con V2.0. Nuevas funcionalidades: sistema calificación por pareja receptora, estados ánimo diarios, recuerdos especiales aleatorios, gamificación avanzada, navegación 5 secciones. Backend incluye 15+ nuevos endpoints, frontend completamente rediseñado con modales, sección Mi Pareja, Recuerdos. Necesita testing completo todas nuevas funcionalidades."
     - agent: "testing"
       message: "🎉 BACKEND V2.0 COMPLETAMENTE PROBADO Y FUNCIONAL: Ejecuté suite completa de pruebas con 100% éxito (10/10 tests pasados). Todas las funcionalidades críticas funcionan perfectamente: ✅ Sistema calificación pareja receptora con validaciones ✅ API estados ánimo diarios con mood tracking ✅ Recuerdos especiales solo 5 estrellas ✅ Gamificación con logros y correlaciones ✅ Endpoints expandidos con pending ratings. Flujo completo probado: crear actividad → pareja califica → generar recuerdos si 5 estrellas. Seguridad y validaciones funcionando correctamente. Backend V2.0 listo para producción."
+    - agent: "main"
+      message: "Iniciando refinamientos de UI pendientes: 1) Corregir overflow de texto en estados de ánimo convirtiéndolos a dropdown 2) Mover versión/status al fondo de pantalla inicio 3) Reducir tamaño fecha 4) Ocultar link Comparar 5) Mostrar corazón roto si no hay actos 6) Remover dropdown Momento del día de sección Añadir 7) Cambiar color ícono app para mejor contraste."
