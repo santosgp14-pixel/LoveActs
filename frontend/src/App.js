@@ -353,6 +353,7 @@ const AuthForm = () => {
 // Componente principal expandido
 const Dashboard = () => {
   const { user, logout, fetchUserInfo, token } = useAuth();
+  const { isInstalled } = usePWA();
   const [currentView, setCurrentView] = useState('home');
   const [activities, setActivities] = useState([]);
   const [partnerActivities, setPartnerActivities] = useState([]);
