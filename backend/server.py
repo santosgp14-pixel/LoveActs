@@ -234,6 +234,10 @@ async def login(user_data: UserLogin):
 async def get_current_user_info(current_user = Depends(get_current_user)):
     partner = get_partner_info(current_user)
     
+    # Obtener información personalizada de pareja
+    partner_custom_name = current_user.get("partner_custom_name")
+    partner_photo = current_user.get("partner_photo")
+    
     return {
         "user": UserResponse(
             id=current_user["id"],
@@ -242,6 +246,8 @@ async def get_current_user_info(current_user = Depends(get_current_user)):
             partner_id=current_user.get("partner_id"),
             partner_code=current_user["partner_code"],
             partner_name=partner["name"] if partner else None,
+            partner_custom_name=partner_custom_name,
+            partner_photo=partner_photo,
             created_at=current_user["created_at"]
         )
     }
