@@ -1656,15 +1656,6 @@ const Dashboard = () => {
               <span className="text-3xl">💕</span>
               <div>
                 <h1 className="text-2xl font-bold text-gray-800">LoveActs</h1>
-                <div className="flex items-center gap-2">
-                  <p className="text-xs text-pink-600">✨ Versión PWA 2.0</p>
-                  {isInstalled && (
-                    <div className="flex items-center gap-1">
-                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                      <span className="text-xs text-green-600">Instalada</span>
-                    </div>
-                  )}
-                </div>
               </div>
             </div>
             <div className="text-sm text-gray-600">
