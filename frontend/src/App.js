@@ -1466,34 +1466,20 @@ const Dashboard = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Categoría
-            </label>
-            <select
-              value={newActivity.category}
-              onChange={(e) => setNewActivity({...newActivity, category: e.target.value})}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-            >
-              <option value="general">❤️ General</option>
-              <option value="physical">🤗 Físico</option>
-              <option value="emotional">💝 Emocional</option>
-              <option value="practical">🏠 Práctico</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Momento del día
-            </label>
-            <input
-              type="time"
-              value={newActivity.time_of_day}
-              onChange={(e) => setNewActivity({...newActivity, time_of_day: e.target.value})}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-            />
-          </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Categoría
+          </label>
+          <select
+            value={newActivity.category}
+            onChange={(e) => setNewActivity({...newActivity, category: e.target.value})}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+          >
+            <option value="general">❤️ General</option>
+            <option value="physical">🤗 Físico</option>
+            <option value="emotional">💝 Emocional</option>
+            <option value="practical">🏠 Práctico</option>
+          </select>
         </div>
 
         {error && (
