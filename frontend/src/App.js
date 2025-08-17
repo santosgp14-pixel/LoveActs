@@ -461,6 +461,12 @@ const Dashboard = () => {
   }, [selectedDate, user]);
 
   useEffect(() => {
+    if (user) {
+      fetchTotalStats(); // Nuevo: cargar estadísticas totales
+    }
+  }, [user]);
+
+  useEffect(() => {
     if (user && currentView === 'partner') {
       fetchPendingRatings();
     }
