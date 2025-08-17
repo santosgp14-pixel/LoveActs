@@ -14,6 +14,103 @@ const useAuth = () => {
   return context;
 };
 
+// Hook para PWA
+const usePWA = () => {
+  const [isInstallable, setIsInstallable] = useState(false);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  useEffect(() => {
+    // Check if already installed
+    if (window.matchMedia('(display-mode: standalone)').matches || 
+        window.navigator.standalone === true) {
+      setIsInstalled(true);
+    }
+
+    // Listen for install prompt
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setIsInstallable(true);
+    };
+
+    // Listen for app installed
+    const handleAppInstalled = () => {
+      setIsInstalled(true);
+      setIsInstallable(false);
+    };
+
+    // Listen for online/offline
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  const installApp = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      
+      if (outcome === 'accepted') {
+        console.log('💕 Usuario aceptó instalar LoveActs');
+      } else {
+        console.log('💔 Usuario rechazó instalar LoveActs');
+      }
+      
+      setDeferredPrompt(null);
+      setIsInstallable(false);
+    }
+  };
+
+  return {
+    isInstallable,
+    isInstalled,
+    isOnline,
+    installApp
+  };
+};
+
+// Componente PWA Install Button
+const PWAInstallButton = () => {
+  const { isInstallable, installApp } = usePWA();
+
+  if (!isInstallable) return null;
+
+  return (
+    <button
+      onClick={installApp}
+      className="fixed top-4 right-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 z-50 text-sm font-semibold"
+    >
+      📱 Instalar App
+    </button>
+  );
+};
+
+// Componente Offline Indicator
+const OfflineIndicator = () => {
+  const { isOnline } = usePWA();
+
+  if (isOnline) return null;
+
+  return (
+    <div className="fixed top-4 left-4 bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 text-sm font-semibold">
+      📵 Modo Offline
+    </div>
+  );
+};
+
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -161,6 +258,9 @@ const AuthForm = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-white to-blue-100 flex items-center justify-center p-4">
+      <PWAInstallButton />
+      <OfflineIndicator />
+      
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 border border-pink-100">
         <div className="text-center mb-8">
           <div className="text-4xl mb-4">💕</div>
@@ -168,7 +268,10 @@ const AuthForm = () => {
           <p className="text-gray-600 text-sm">
             {isLogin ? 'Bienvenido de vuelta' : 'Únete y comparte amor cada día'}
           </p>
-          <p className="text-xs text-pink-600 mt-2">✨ Versión Expandida 2.0</p>
+          <div className="flex items-center justify-center gap-2 mt-2">
+            <p className="text-xs text-pink-600">✨ Versión PWA 2.0</p>
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" title="App instalable"></div>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
