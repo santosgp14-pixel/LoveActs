@@ -1,0 +1,118 @@
+{
+  "name": "LoveActs - Actos de Amor Diarios",
+  "short_name": "LoveActs",
+  "description": "Aplicación romántica para parejas que registran y califican actos de amor diarios, con estados de ánimo y recuerdos especiales.",
+  "version": "2.0.0",
+  "lang": "es-ES",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#ec4899",
+  "background_color": "#fdf2f8",
+  "scope": "/",
+  "categories": ["lifestyle", "social", "productivity"],
+  "screenshots": [
+    {
+      "src": "/images/screenshot-1.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/images/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-96x96.png",
+      "sizes": "96x96", 
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-152x152.png", 
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Añadir Acto de Amor",
+      "short_name": "Añadir",
+      "description": "Registra un nuevo acto de amor",
+      "url": "/?view=add",
+      "icons": [
+        {
+          "src": "/images/shortcut-add.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Mi Pareja",
+      "short_name": "Pareja", 
+      "description": "Ver información de tu pareja",
+      "url": "/?view=partner",
+      "icons": [
+        {
+          "src": "/images/shortcut-partner.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Recuerdos Especiales",
+      "short_name": "Recuerdos",
+      "description": "Ver tus recuerdos de 5 estrellas",
+      "url": "/?view=memories",
+      "icons": [
+        {
+          "src": "/images/shortcut-memories.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "features": [
+    "Cross Platform",
+    "fast",
+    "simple"
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}
