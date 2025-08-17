@@ -1963,6 +1963,90 @@ const Dashboard = () => {
         </div>
       )}
 
+      {/* Modal para editar información de pareja - NUEVO */}
+      {showEditPartnerModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+              ✏️ Personalizar Mi Pareja
+            </h3>
+            <p className="text-gray-600 text-sm mb-6 text-center">
+              Agrega un apodo tierno y una foto especial
+            </p>
+
+            <form onSubmit={handleUpdatePartnerInfo} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Apodo Tierno
+                </label>
+                <input
+                  type="text"
+                  value={editPartnerData.custom_name}
+                  onChange={(e) => setEditPartnerData({...editPartnerData, custom_name: e.target.value})}
+                  placeholder="Mi amor, corazón, mi vida..."
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Déjalo vacío para usar el nombre original
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Foto de Pareja
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+                {editPartnerData.photo && (
+                  <div className="mt-3 text-center">
+                    <img 
+                      src={editPartnerData.photo} 
+                      alt="Preview" 
+                      className="w-20 h-20 rounded-full mx-auto object-cover border-4 border-purple-200"
+                    />
+                    <p className="text-xs text-green-600 mt-1">✓ Foto cargada</p>
+                  </div>
+                )}
+                <p className="text-xs text-gray-500 mt-1">
+                  Máximo 5MB - JPG, PNG, WEBP
+                </p>
+              </div>
+
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                  {error}
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition duration-200 disabled:opacity-50"
+                >
+                  {loading ? 'Guardando...' : '💜 Guardar Cambios'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowEditPartnerModal(false);
+                    setEditPartnerData({ custom_name: '', photo: '' });
+                    setError('');
+                  }}
+                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-200"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Padding bottom para la navegación fija */}
       <div className="pb-20"></div>
     </div>
