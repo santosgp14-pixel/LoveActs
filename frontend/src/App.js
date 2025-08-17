@@ -423,11 +423,17 @@ const Dashboard = () => {
   const [partnerMood, setPartnerMood] = useState(null);
   const [memories, setMemories] = useState([]);
   const [achievements, setAchievements] = useState([]);
+  const [totalStats, setTotalStats] = useState(null); // Nuevo: estadísticas totales
   const [showPartnerModal, setShowPartnerModal] = useState(false);
   const [showMoodModal, setShowMoodModal] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
+  const [showEditPartnerModal, setShowEditPartnerModal] = useState(false); // Nuevo modal
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [partnerCode, setPartnerCode] = useState('');
+  const [editPartnerData, setEditPartnerData] = useState({ // Nuevo: datos de edición
+    custom_name: '',
+    photo: ''
+  });
   const [newActivity, setNewActivity] = useState({
     description: '',
     category: 'general',
