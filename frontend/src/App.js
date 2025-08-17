@@ -1464,10 +1464,11 @@ const Dashboard = () => {
             onChange={(e) => setNewActivity({...newActivity, category: e.target.value})}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
           >
-            <option value="general">❤️ General</option>
-            <option value="physical">🤗 Físico</option>
-            <option value="emotional">💝 Emocional</option>
-            <option value="practical">🏠 Práctico</option>
+            <option value="words_of_affirmation">💬 Palabras de afirmación</option>
+            <option value="quality_time">⏰ Tiempo de calidad</option>
+            <option value="gifts">🎁 Regalos</option>
+            <option value="acts_of_service">🤝 Actos de servicio</option>
+            <option value="physical_touch">🤗 Contacto físico</option>
           </select>
         </div>
 
