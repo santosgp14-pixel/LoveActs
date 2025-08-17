@@ -1372,7 +1372,7 @@ const Dashboard = () => {
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-lg">{getCategoryIcon(memory.activity.category)}</span>
                       <span className="text-sm font-medium text-yellow-700 capitalize">
-                        {memory.activity.category}
+                        {getCategoryName(memory.activity.category)}
                       </span>
                       <span className="text-sm text-gray-600">
                         • {new Date(memory.activity.date).toLocaleDateString('es-ES')}
