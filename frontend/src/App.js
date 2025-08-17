@@ -806,16 +806,24 @@ const Dashboard = () => {
   };
 
   const getMoodEmojis = () => [
-    { level: 1, emoji: '😭', label: 'Devastado/a' },
-    { level: 2, emoji: '😢', label: 'Muy triste' },
-    { level: 3, emoji: '😔', label: 'Triste' },
-    { level: 4, emoji: '😐', label: 'Neutral' },
-    { level: 5, emoji: '🙂', label: 'Tranquilo/a' },
-    { level: 6, emoji: '😊', label: 'Contento/a' },
-    { level: 7, emoji: '😄', label: 'Alegre' },
-    { level: 8, emoji: '😍', label: 'Enamorado/a' },
-    { level: 9, emoji: '🥰', label: 'Radiante' },
-    { level: 10, emoji: '🤩', label: 'Eufórico/a' }
+    { id: 'devastated', emoji: '😭', label: 'Devastado/a' },
+    { id: 'very_sad', emoji: '😢', label: 'Muy triste' },
+    { id: 'sad', emoji: '😔', label: 'Triste' },
+    { id: 'neutral', emoji: '😐', label: 'Neutral' },
+    { id: 'calm', emoji: '🙂', label: 'Tranquilo/a' },
+    { id: 'happy', emoji: '😊', label: 'Contento/a' },
+    { id: 'joyful', emoji: '😄', label: 'Alegre' },
+    { id: 'in_love', emoji: '😍', label: 'Enamorado/a' },
+    { id: 'radiant', emoji: '🥰', label: 'Radiante' },
+    { id: 'euphoric', emoji: '🤩', label: 'Eufórico/a' },
+    { id: 'horny', emoji: '😏', label: 'Horny' },
+    { id: 'hungry', emoji: '🍔', label: 'Hambriento/a' },
+    { id: 'bored', emoji: '😐', label: 'Aburrido/a' },
+    { id: 'sleepy', emoji: '😴', label: 'Somnoliento/a' },
+    { id: 'excited', emoji: '🤗', label: 'Emocionado/a' },
+    { id: 'silly', emoji: '🤪', label: 'Tonto/a' },
+    { id: 'stressed', emoji: '😰', label: 'Estresado/a' },
+    { id: 'confident', emoji: '😎', label: 'Confiado/a' }
   ];
 
   // Vista Home Expandida - MODIFICADA según nuevos requisitos
