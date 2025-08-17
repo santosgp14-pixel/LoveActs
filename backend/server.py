@@ -116,7 +116,7 @@ class TotalStatsResponse(BaseModel):
 
 # Modelos para Estado de Ánimo
 class MoodCreate(BaseModel):
-    mood_level: int  # 1-5 (1=muy mal, 5=excelente)
+    mood_level: int  # 1-10 (1=devastado, 10=eufórico)
     mood_emoji: str  # emoji representativo
     note: Optional[str] = None
 
