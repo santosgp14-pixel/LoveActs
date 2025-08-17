@@ -1097,7 +1097,7 @@ const Dashboard = () => {
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-lg">{getCategoryIcon(activity.category)}</span>
                         <span className="text-sm font-medium text-pink-700 capitalize">
-                          {activity.category}
+                          {getCategoryName(activity.category)}
                         </span>
                       </div>
                       <p className="text-gray-700 font-medium mb-2">{activity.description}</p>
