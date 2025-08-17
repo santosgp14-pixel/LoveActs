@@ -1837,29 +1837,40 @@ const Dashboard = () => {
 
             <form onSubmit={handleAddMood} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Selecciona tu estado de ánimo
                 </label>
-                <div className="grid grid-cols-5 gap-2">
-                  {getMoodEmojis().map((mood) => (
-                    <button
-                      key={mood.level}
-                      type="button"
-                      onClick={() => setNewMood({
-                        ...newMood, 
-                        mood_level: mood.level, 
-                        mood_emoji: mood.emoji
-                      })}
-                      className={`p-3 rounded-lg text-center transition duration-200 ${
-                        newMood.mood_level === mood.level
-                          ? 'bg-purple-100 border-2 border-purple-500'
-                          : 'bg-gray-50 border border-gray-200 hover:bg-purple-50'
-                      }`}
-                    >
-                      <div className="text-2xl mb-1">{mood.emoji}</div>
-                      <div className="text-xs font-medium">{mood.label}</div>
-                    </button>
-                  ))}
+                <div className="relative">
+                  <select
+                    value={newMood.mood_level}
+                    onChange={(e) => {
+                      const selectedMood = getMoodEmojis().find(mood => mood.level === parseInt(e.target.value));
+                      setNewMood({
+                        ...newMood,
+                        mood_level: selectedMood.level,
+                        mood_emoji: selectedMood.emoji
+                      });
+                    }}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent appearance-none bg-white text-base"
+                  >
+                    {getMoodEmojis().map((mood) => (
+                      <option key={mood.level} value={mood.level}>
+                        {mood.emoji} {mood.label} (Nivel {mood.level}/10)
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
+                </div>
+                {/* Mostrar el emoji seleccionado */}
+                <div className="mt-3 text-center">
+                  <div className="text-4xl mb-1">{newMood.mood_emoji}</div>
+                  <div className="text-sm text-gray-600">
+                    {getMoodEmojis().find(mood => mood.level === newMood.mood_level)?.label}
+                  </div>
                 </div>
               </div>
 
