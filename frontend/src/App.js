@@ -1147,13 +1147,45 @@ const Dashboard = () => {
 
     return (
       <div className="space-y-6">
-        {/* Información de la pareja */}
+        {/* Información de la pareja - MODIFICADA */}
         <div className="bg-white rounded-xl shadow-lg p-6 border border-purple-100">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-            <span>💑</span> Mi Pareja: {user.partner_name}
-          </h2>
+          <div className="flex justify-between items-start mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+              <span>💑</span> Mi Pareja: {user.partner_custom_name || user.partner_name}
+            </h2>
+            <button
+              onClick={() => {
+                setEditPartnerData({
+                  custom_name: user.partner_custom_name || user.partner_name || '',
+                  photo: user.partner_photo || ''
+                });
+                setShowEditPartnerModal(true);
+              }}
+              className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition duration-200 text-sm"
+            >
+              ✏️ Editar Info
+            </button>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Foto y datos de pareja - NUEVO */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            {/* Foto de pareja */}
+            <div className="text-center">
+              <div className="w-24 h-24 mx-auto mb-3 rounded-full overflow-hidden bg-gradient-to-r from-purple-100 to-pink-100 flex items-center justify-center">
+                {user.partner_photo ? (
+                  <img 
+                    src={user.partner_photo} 
+                    alt="Foto de pareja" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-3xl">👤</span>
+                )}
+              </div>
+              <h3 className="font-bold text-purple-800">{user.partner_custom_name || user.partner_name}</h3>
+              <p className="text-sm text-gray-600">Tu media naranja 💕</p>
+            </div>
+
             {/* Estado de ánimo de la pareja */}
             <div className="bg-purple-50 rounded-lg p-4">
               <h3 className="font-semibold text-purple-800 mb-3">Estado de Ánimo Hoy</h3>
