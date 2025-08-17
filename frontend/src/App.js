@@ -1626,14 +1626,25 @@ const App = () => {
 
 const Main = () => {
   const { user, loading } = useAuth();
+  const { isInstalled } = usePWA();
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-pink-100 via-white to-blue-100 flex items-center justify-center">
+        <PWAInstallButton />
+        <OfflineIndicator />
         <div className="text-center">
           <div className="text-6xl mb-4">💕</div>
           <div className="text-xl text-gray-600">Cargando LoveActs...</div>
-          <div className="text-sm text-pink-600 mt-2">✨ Versión Expandida 2.0</div>
+          <div className="flex items-center justify-center gap-2 mt-2">
+            <div className="text-sm text-pink-600">✨ Versión PWA 2.0</div>
+            {isInstalled && (
+              <div className="flex items-center gap-1">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-xs text-green-600">Instalada</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
