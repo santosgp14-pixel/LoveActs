@@ -1,5 +1,5 @@
-// LoveActs PWA Service Worker v2.1 - Con Auto-update
-const CACHE_NAME = 'loveacts-v2-1-cache';
+// LoveActs PWA Service Worker v2.1.0 - Modificaciones implementadas
+const CACHE_NAME = 'loveacts-v2-1-0-cache';
 
 // Archivos esenciales
 const ESSENTIAL_FILES = [
