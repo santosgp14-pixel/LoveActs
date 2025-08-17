@@ -1124,6 +1124,9 @@ const Dashboard = () => {
       </div>
     </div>
   );
+
+  // Nueva Vista: Mi Pareja - MODIFICADA
+  const renderPartnerView = () => {
     if (!user?.partner_id) {
       return (
         <div className="bg-white rounded-xl shadow-lg p-8 border border-pink-100 text-center">
