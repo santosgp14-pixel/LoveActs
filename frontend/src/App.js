@@ -436,8 +436,7 @@ const Dashboard = () => {
   });
   const [newActivity, setNewActivity] = useState({
     description: '',
-    category: 'general',
-    time_of_day: ''
+    category: 'general'
   });
   const [newMood, setNewMood] = useState({
     mood_level: 6,
