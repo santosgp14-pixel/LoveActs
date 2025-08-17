@@ -330,7 +330,7 @@ const AuthForm = () => {
             {isLogin ? 'Bienvenido de vuelta' : 'Únete y comparte amor cada día'}
           </p>
           <div className="flex items-center justify-center gap-2 mt-2">
-            <p className="text-xs text-pink-600">✨ Versión PWA 2.0</p>
+            <p className="text-xs text-pink-600">✨ Versión PWA 2.2</p>
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" title="App instalable"></div>
           </div>
         </div>
