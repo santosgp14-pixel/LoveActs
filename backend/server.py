@@ -590,6 +590,22 @@ async def create_mood(mood_data: MoodCreate, current_user = Depends(get_current_
         db.moods.insert_one(mood_doc)
         message = "Estado de ánimo registrado exitosamente"
     
+    # NUEVA: Enviar notificación a la pareja
+    if current_user.get("partner_id"):
+        partner_name = current_user.get("partner_custom_name") or current_user["name"]
+        mood_text = {
+            1: "muy mal 😢", 2: "mal 😔", 3: "neutral 😐", 
+            4: "bien 😊", 5: "excelente 🥰"
+        }.get(mood_data.mood_level, "diferente")
+        
+        notification = NotificationMessage(
+            title=f"{mood_data.mood_emoji} Cambió su estado de ánimo",
+            body=f"{partner_name} se siente {mood_text} hoy. ¡Tal vez necesite un abrazo!",
+            tag="mood_change",
+            data={"mood_level": mood_data.mood_level, "type": "mood_change"}
+        )
+        await notify_partner(current_user, notification)
+    
     return {
         "message": message,
         "mood": MoodResponse(**mood_doc)
