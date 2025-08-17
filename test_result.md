@@ -180,6 +180,18 @@
           agent: "testing"
           comment: "✅ ENDPOINTS COMPLETAMENTE FUNCIONALES: Probado GET /api/activities/pending-ratings retorna actividades pareja pendientes calificar. GET /api/activities/daily/{date} incluye pending_ratings_count, user_mood, partner_mood, completed_activities_score. Cálculo correcto actividades completadas vs pendientes."
 
+  - task: "Backend support for optional time_of_day field in activities"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ COMPLETAMENTE FUNCIONAL: Probado POST /api/activities funciona perfectamente SIN campo time_of_day (valor None), CON campo time_of_day (valor preservado), y casos edge (string vacío, null explícito). GET /api/activities/daily/{date} retorna correctamente ambos tipos de actividades. Backend maneja Optional[str] = None correctamente en modelo ActivityCreate. 100% éxito en 5 tests específicos."
+
 ## frontend:
   - task: "Navegación expandida con 5 secciones"
     implemented: true
