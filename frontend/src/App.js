@@ -785,6 +785,22 @@ const Dashboard = () => {
     return icons[category] || '❤️';
   };
 
+  const getCategoryName = (category) => {
+    const names = {
+      'words_of_affirmation': 'Palabras de afirmación',
+      'quality_time': 'Tiempo de calidad',
+      'gifts': 'Regalos',
+      'acts_of_service': 'Actos de servicio',
+      'physical_touch': 'Contacto físico',
+      // Categorías anteriores para compatibilidad
+      'general': 'General',
+      'physical': 'Físico',
+      'emotional': 'Emocional',
+      'practical': 'Práctico'
+    };
+    return names[category] || category;
+  };
+
   const getStarRating = (rating) => {
     return rating ? '⭐'.repeat(rating) : '⏳ Pendiente';
   };
