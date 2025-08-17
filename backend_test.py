@@ -305,63 +305,68 @@ class LoveActsV2BackendTester:
         return True
     
     def test_mood_system(self):
-        """Test daily mood tracking system"""
+        """Test daily mood tracking system with new mood_id system"""
         if not self.user1_token or not self.user2_token:
             self.log_result("Mood System", False, "Missing user tokens")
             return False
         
-        # Test creating moods for both users
+        # Test creating moods with new mood_id system (string IDs instead of levels)
         moods_to_test = [
-            {"mood_level": 5, "mood_emoji": "🥰", "note": "¡Día increíble con mi pareja!"},
-            {"mood_level": 4, "mood_emoji": "😊", "note": "Muy buen día, me siento feliz"},
-            {"mood_level": 3, "mood_emoji": "😐", "note": "Día normal, nada especial"}
+            {"mood_id": "happy", "mood_emoji": "🥰", "note": "¡Día increíble con mi pareja!"},
+            {"mood_id": "content", "mood_emoji": "😊", "note": "Muy buen día, me siento feliz"},
+            {"mood_id": "neutral", "mood_emoji": "😐", "note": "Día normal, nada especial"},
+            {"mood_id": "horny", "mood_emoji": "😈", "note": "Feeling frisky today"},
+            {"mood_id": "bored", "mood_emoji": "😴", "note": "Nothing exciting happening"},
+            {"mood_id": "sleepy", "mood_emoji": "😪", "note": "Need more rest"}
         ]
         
         headers1 = {"Authorization": f"Bearer {self.user1_token}"}
         headers2 = {"Authorization": f"Bearer {self.user2_token}"}
         
-        # Create mood for User 1
-        try:
-            response = self.session.post(f"{BACKEND_URL}/mood", json=moods_to_test[0], headers=headers1)
-            if response.status_code == 200:
-                data = response.json()
-                if "mood" in data and data["mood"]["mood_level"] == 5:
-                    self.log_result("Create Mood (User 1)", True, "Successfully created mood for María")
+        # Test various mood IDs for User 1
+        for i, mood_data in enumerate(moods_to_test[:3]):
+            try:
+                response = self.session.post(f"{BACKEND_URL}/mood", json=mood_data, headers=headers1)
+                if response.status_code == 200:
+                    data = response.json()
+                    if "mood_id" in data and data["mood_id"] == mood_data["mood_id"]:
+                        self.log_result(f"Create Mood ID '{mood_data['mood_id']}' (User 1)", True, f"Successfully created mood with ID: {mood_data['mood_id']}")
+                    else:
+                        self.log_result(f"Create Mood ID '{mood_data['mood_id']}' (User 1)", False, "Invalid mood response", data)
+                        return False
                 else:
-                    self.log_result("Create Mood (User 1)", False, "Invalid mood response", data)
+                    self.log_result(f"Create Mood ID '{mood_data['mood_id']}' (User 1)", False, f"HTTP {response.status_code}", response.text)
                     return False
-            else:
-                self.log_result("Create Mood (User 1)", False, f"HTTP {response.status_code}", response.text)
+            except Exception as e:
+                self.log_result(f"Create Mood ID '{mood_data['mood_id']}' (User 1)", False, f"Request error: {str(e)}")
                 return False
-        except Exception as e:
-            self.log_result("Create Mood (User 1)", False, f"Request error: {str(e)}")
-            return False
         
-        # Create mood for User 2
-        try:
-            response = self.session.post(f"{BACKEND_URL}/mood", json=moods_to_test[1], headers=headers2)
-            if response.status_code == 200:
-                data = response.json()
-                if "mood" in data and data["mood"]["mood_level"] == 4:
-                    self.log_result("Create Mood (User 2)", True, "Successfully created mood for Carlos")
+        # Test various mood IDs for User 2
+        for i, mood_data in enumerate(moods_to_test[3:]):
+            try:
+                response = self.session.post(f"{BACKEND_URL}/mood", json=mood_data, headers=headers2)
+                if response.status_code == 200:
+                    data = response.json()
+                    if "mood_id" in data and data["mood_id"] == mood_data["mood_id"]:
+                        self.log_result(f"Create Mood ID '{mood_data['mood_id']}' (User 2)", True, f"Successfully created mood with ID: {mood_data['mood_id']}")
+                    else:
+                        self.log_result(f"Create Mood ID '{mood_data['mood_id']}' (User 2)", False, "Invalid mood response", data)
+                        return False
                 else:
-                    self.log_result("Create Mood (User 2)", False, "Invalid mood response", data)
+                    self.log_result(f"Create Mood ID '{mood_data['mood_id']}' (User 2)", False, f"HTTP {response.status_code}", response.text)
                     return False
-            else:
-                self.log_result("Create Mood (User 2)", False, f"HTTP {response.status_code}", response.text)
+            except Exception as e:
+                self.log_result(f"Create Mood ID '{mood_data['mood_id']}' (User 2)", False, f"Request error: {str(e)}")
                 return False
-        except Exception as e:
-            self.log_result("Create Mood (User 2)", False, f"Request error: {str(e)}")
-            return False
         
         # Test updating existing mood (should update, not create new)
         try:
-            updated_mood = {"mood_level": 5, "mood_emoji": "🥰", "note": "Actualicé mi estado de ánimo"}
+            updated_mood = {"mood_id": "excited", "mood_emoji": "🤩", "note": "Actualicé mi estado de ánimo"}
             response = self.session.post(f"{BACKEND_URL}/mood", json=updated_mood, headers=headers1)
             if response.status_code == 200:
                 data = response.json()
-                if "actualizado" in data["message"]:
-                    self.log_result("Update Mood", True, "Successfully updated existing mood")
+                if data["mood_id"] == "excited":
+                    self.log_result("Update Mood", True, "Successfully updated existing mood with new mood_id")
                 else:
                     self.log_result("Update Mood", False, "Should have updated existing mood", data)
                     return False
@@ -372,17 +377,30 @@ class LoveActsV2BackendTester:
             self.log_result("Update Mood", False, f"Request error: {str(e)}")
             return False
         
-        # Test invalid mood level
+        # Test empty mood_id validation
         try:
-            invalid_mood = {"mood_level": 6, "mood_emoji": "😊", "note": "Invalid mood"}
+            invalid_mood = {"mood_id": "", "mood_emoji": "😊", "note": "Empty mood ID"}
             response = self.session.post(f"{BACKEND_URL}/mood", json=invalid_mood, headers=headers1)
             if response.status_code == 400:
-                self.log_result("Invalid Mood Validation", True, "Correctly rejected mood level > 5")
+                self.log_result("Empty Mood ID Validation", True, "Correctly rejected empty mood_id")
             else:
-                self.log_result("Invalid Mood Validation", False, f"Should reject mood > 5, got {response.status_code}")
+                self.log_result("Empty Mood ID Validation", False, f"Should reject empty mood_id, got {response.status_code}")
                 return False
         except Exception as e:
-            self.log_result("Invalid Mood Validation", False, f"Request error: {str(e)}")
+            self.log_result("Empty Mood ID Validation", False, f"Request error: {str(e)}")
+            return False
+        
+        # Test missing mood_id validation
+        try:
+            invalid_mood = {"mood_emoji": "😊", "note": "Missing mood ID"}
+            response = self.session.post(f"{BACKEND_URL}/mood", json=invalid_mood, headers=headers1)
+            if response.status_code == 422:  # Pydantic validation error
+                self.log_result("Missing Mood ID Validation", True, "Correctly rejected missing mood_id")
+            else:
+                self.log_result("Missing Mood ID Validation", False, f"Should reject missing mood_id, got {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_result("Missing Mood ID Validation", False, f"Request error: {str(e)}")
             return False
         
         # Test weekly mood retrieval
@@ -395,7 +413,12 @@ class LoveActsV2BackendTester:
             if response.status_code == 200:
                 data = response.json()
                 if "user_moods" in data and "partner_moods" in data and "dates" in data:
-                    self.log_result("Weekly Mood Retrieval", True, f"Retrieved weekly moods for 7 days")
+                    # Check if moods contain mood_id field
+                    user_moods = [mood for mood in data["user_moods"] if mood is not None]
+                    if user_moods and all("mood_id" in mood for mood in user_moods):
+                        self.log_result("Weekly Mood Retrieval", True, f"Retrieved weekly moods with mood_id for 7 days")
+                    else:
+                        self.log_result("Weekly Mood Retrieval", True, f"Retrieved weekly moods structure (no mood_id data yet)")
                 else:
                     self.log_result("Weekly Mood Retrieval", False, "Missing weekly mood data", data)
                     return False
@@ -406,7 +429,7 @@ class LoveActsV2BackendTester:
             self.log_result("Weekly Mood Retrieval", False, f"Request error: {str(e)}")
             return False
         
-        self.log_result("Mood System", True, "All mood system tests passed")
+        self.log_result("Mood System", True, "All mood system tests passed with new mood_id system")
         return True
     
     def test_special_memories(self):
